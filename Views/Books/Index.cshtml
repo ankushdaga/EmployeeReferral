@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Books Page";
+}
+@model Books
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">book page</a>.</p>
+</div>
+
+@*<button class="btn btn-info" type="button" id="addressSearch"
+        onclick="location.href = '@Url.Action("AddPerson", "Books")'" />*@
+
+
+@using (Html.BeginForm("AddPerson", "Books", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+   
+    <div class="form-horizontal">
+     
+        <div class="form-group">
+            @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.File, new { type = "file" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}  
