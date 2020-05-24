@@ -19,11 +19,11 @@ namespace ReferralSystem.Models
 
         public async Task AuthenticateRequestAsync(HttpRequestMessage request)
         {
-            string clientId = "76b04c1f-2db1-4c60-b7a5-4022369018ab";
-            string clientSecret = "ykUxQNDCLWBsk41vv_09-N36o1i~Hpl3F-";
+            string clientId = "";
+            string clientSecret = "";
 
             string Instance = "https://login.microsoftonline.com/{0}";
-            string authority = string.Format(CultureInfo.InvariantCulture, Instance, "ReferralSystem.onmicrosoft.com");
+            string authority = string.Format(CultureInfo.InvariantCulture, Instance, "");
 
             AuthenticationContext authContext = new AuthenticationContext(authority);
 
