@@ -1,36 +1,40 @@
 ﻿
-@using Microsoft.Graph
-@model List<User>
-@using Kendo.Mvc
 @using Kendo.Mvc.UI
+@using ReferralSystem.Models
 
-@(Html.Kendo().Grid<UserModel>
-                    ()
-                    .Name("grid")
-                    .ColumnMenu(col => col.Filterable(false))
-                    .Columns(columns =>
-                            {
-                                columns.Bound(p => p.DisplayName).Width(100);
-                                columns.Command(command => { command.Edit(); command.Destroy(); }).Width(160);
-                            })
-                    .Height(500)
-                    .Editable(editable => editable.Mode(GridEditMode.PopUp))
-                    .Pageable()
-                    .Sortable()
-                    .Navigatable()
-                    .Resizable(r => r.Columns(true))
-                    .Reorderable(r => r.Columns(true))
-                    .Groupable(g => g.ShowFooter(false))
-                    .Filterable()
-                    .Scrollable()
-                    .DataSource(dataSource => dataSource  
-                    .Ajax()
-                    .Batch(true)
-                    .PageSize(20)
-                    .AutoSync(true)
-                    .ServerOperation(false)
-                    .Events(events => events.Error("error_handler"))
-                        .Read("Users_Read", "Home")))
+@(Html.Kendo().Grid<DemandModel>
+                        ()
+                        .Name("gridDemands")
+                        .ColumnMenu(col => col.Filterable(false))
+                        .Columns(columns =>
+                                {
+                                    columns.Bound(p => p.DemandID).Width(100);
+                                    columns.Bound(p => p.Position).Width(100);
+                                    columns.Bound(p => p.Experience).Width(100);
+                                    columns.Bound(p => p.Location).Width(100);
+                                    columns.Bound(p => p.NoOfVacancies).Width(100);
+                                    columns.Bound(p => p.ClosingDate).Width(100);
+                                    columns.Bound(p => p.Status).Width(100);
+                                    columns.Command(command => { command.Edit(); }).Width(160);
+                                })
+                        .Height(500)
+                        .Editable(editable => editable.Mode(GridEditMode.InLine))
+                        .Pageable()
+                        .Sortable()
+                        .Navigatable()
+                        .Resizable(r => r.Columns(true))
+                        .Reorderable(r => r.Columns(true))
+                        .Groupable(g => g.ShowFooter(false))
+                        .Filterable()
+                        .Scrollable()
+                        .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Batch(true)
+                        .PageSize(20)
+                        .AutoSync(true)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                            .Read("Demands_Read", "Home")))
 
 <script type="text/javascript">
     function error_handler(e) {
@@ -125,5 +129,4 @@
         width: 100%;
     }
 </style>
-
 

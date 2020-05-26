@@ -9,7 +9,7 @@ using ReferralSystem.Service;
 
 namespace ReferralSystem.Models
 {
-    public class Profile
+    public class ProfileModel
     {
        public string CandidateName { get; set; }
        public string UniqueID { get; set; }

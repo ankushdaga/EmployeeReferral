@@ -9,7 +9,7 @@ using ReferralSystem.Service;
 
 namespace ReferralSystem.Models
 {
-    public class Demand
+    public class DemandModel
     {
        public int DemandID { get; set; }
        public string BusinessUnit { get; set; }
@@ -21,6 +21,7 @@ namespace ReferralSystem.Models
        public string NoOfVacancies { get; set; }
        public string RequesterEmail { get; set; }
        public string DemandDate { get; set; }
-       public string ClosingDate { get; set; }     
+       public string ClosingDate { get; set; }
+       public string Status { get; set; }
     }
 }
