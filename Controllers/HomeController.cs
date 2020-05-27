@@ -24,6 +24,12 @@ namespace ReferralSystem.Controllers
              return View();
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Demand()
+        {
+            return View();
+        }
+
 
         private IEnumerable<User> Read()
         {
@@ -34,7 +40,7 @@ namespace ReferralSystem.Controllers
         }
 
 
-        public IActionResult DetailProducts_Read([DataSourceRequest]DataSourceRequest request)
+        public IActionResult Users_Read([DataSourceRequest]DataSourceRequest request)
         {
             List<UserModel> userResult = new List<UserModel>();
 
@@ -71,6 +77,16 @@ namespace ReferralSystem.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Demands_Read([DataSourceRequest]DataSourceRequest request)
+        {
+            List<DemandModel> demands = new List<DemandModel>();
+
+            demands.Add(new DemandModel() { Experience = "10", ClosingDate = "13/12/21", NoOfVacancies="5", Position ="SSC" });
+            demands.Add(new DemandModel() { Experience = "5", ClosingDate = "06/01/20", NoOfVacancies = "1", Position = "SC" });
+
+            return Json(demands.ToDataSourceResult(request));
         }
     }
 }
