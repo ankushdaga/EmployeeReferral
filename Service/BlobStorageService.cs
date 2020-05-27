@@ -21,12 +21,12 @@ namespace ReferralSystem.Service
             _configuration = configuration;
         }
 
-        public string UploadFileToBlob(string strFileName, IFormFile fileData, string fileMimeType)
+        public string UploadFileToBlob(string strFileName, IFormFile fileData)
         {
             try
             {
 
-                var _task = Task.Run(() => this.UploadFileToBlobAsync(strFileName, fileData, fileMimeType));
+                var _task = Task.Run(() => this.UploadFileToBlobAsync(strFileName, fileData));
                 _task.Wait();
                 string fileUrl = _task.Result;
                 return fileUrl;
@@ -43,11 +43,11 @@ namespace ReferralSystem.Service
         {
             string strFileName = string.Empty;
             string[] strName = fileName.Split('.');
-            strFileName = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd") + "/" + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd\\THHmmssfff") + "." + strName[strName.Length - 1];
+            strFileName =  DateTime.Now.ToUniversalTime().ToString("yyyyMMdd\\THHmmssfff") + "." + fileName;
             return strFileName;
         }
 
-        private async Task<string> UploadFileToBlobAsync(string strFileName, IFormFile fileData, string fileMimeType)
+        private async Task<string> UploadFileToBlobAsync(string strFileName, IFormFile fileData)
         {
             var filePath = Path.GetTempFileName();
 
@@ -64,8 +64,7 @@ namespace ReferralSystem.Service
 
                 this.accessKey = _configuration.GetSection("AccessKey").Value;
 
-                accessKey =
-                    "";
+               
                 CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(accessKey);
                 CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
 
@@ -84,17 +83,17 @@ namespace ReferralSystem.Service
                 //{
                 //   await blockBlob.DownloadToStreamAsync(fileStream);
                 //}
-                fileMimeType = "application/pdf";
+                //fileMimeType = "application/pdf";
 
                 if (fileName != null && fileData != null)
                 {
-                    var blockBlob = cloudBlobContainer.GetBlockBlobReference("latest.pdf");
+                    var blockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
                     using (var fileStream = System.IO.File.OpenRead(@filePath))
                     {
                         await blockBlob.UploadFromStreamAsync(fileStream);
                     }
 
-                    //var abc  = blockBlob.Uri.AbsoluteUri;
+                    var abc  = blockBlob.Uri.AbsoluteUri;
 
                     //using (SyncMemoryStream stream1 = new SyncMemoryStream(fileData, 0, fileData.Length))
                     //{

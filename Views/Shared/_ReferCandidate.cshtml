@@ -1,0 +1,67 @@
+@model Employee
+
+@using (Html.BeginForm("UploadReferral", "Employee", FormMethod.Post, new { @id = "form1" , enctype = "multipart/form-data"  }))
+{
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.JobId, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-3">
+                @Html.DisplayFor(m => m.JobId)
+            </div>
+        </div>
+    </div>
+    
+   
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.File, htmlAttributes: new {@class = "control-label"})
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.File, new {type = "file" ,  @id = "filedata" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <br />
+        <div class="col-md-3">
+        <span id="MonoErrorMessage"></span>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" onclick = "return validateForm();" class="btn btn-success">Save</button>
+            </div>
+            <div class="col-md-2">
+                @*<input style="margin-left: 30px" type="submit" value="Save" class="btn btn-success" />*@
+                <button type="button" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+}  
+
+<script>
+    function validateForm() {
+        debugger;
+        if ($('#filedata').val() === "") {
+            $('#MonoErrorMessage').text("Please select a file").css('color', 'red');
+            $('#MonoErrorMessage').show();
+            event.preventDefault();
+        } else {
+            $('#MonoErrorMessage').text("");
+        }
+
+       
+    }
+</script>

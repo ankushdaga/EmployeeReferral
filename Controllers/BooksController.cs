@@ -50,6 +50,17 @@ namespace ReferralSystem.Controllers
         public async Task<IActionResult> AddPerson(Books book)
         {
 
+
+            decimal d = 1.23M;
+            var bookdata = new Books()
+            {
+                BookName = "John",
+                Price = d
+            };
+
+            await _bookRepo.InsertOneAsync(bookdata);
+
+
             //code for uploading blob data to azure
             BlobStorageService objBlobService = new BlobStorageService(_configuration);
             byte[] fileData = new byte[book.File.Length];
@@ -57,7 +68,7 @@ namespace ReferralSystem.Controllers
 
           
           
-            book.Author = objBlobService.UploadFileToBlob("ankush.pdf", book.File, mimeType1);
+            book.Author = objBlobService.UploadFileToBlob("ankush.pdf", book.File);
 
 
 
