@@ -9,12 +9,12 @@ using ReferralSystem.Service;
 
 namespace ReferralSystem.Models
 {
-    public class DemandModel
+    public class Position
     {
-       public int DemandID { get; set; }
+       public string DemandID { get; set; }
        public string BusinessUnit { get; set; }
        public string ProjectName { get; set; }
-       public string Position { get; set; }
+       public string Role { get; set; }
        public string Band { get; set; }
        public string Experience { get; set; }
        public string Location { get; set; }

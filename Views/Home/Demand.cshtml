@@ -2,21 +2,21 @@
 @using Kendo.Mvc.UI
 @using ReferralSystem.Models
 
-@(Html.Kendo().Grid<DemandModel>
+@(Html.Kendo().Grid<Demand>
                         ()
                         .Name("gridDemands")
                         .ColumnMenu(col => col.Filterable(false))
                         .Columns(columns =>
-                                {
-                                    columns.Bound(p => p.DemandID).Width(100);
-                                    columns.Bound(p => p.Position).Width(100);
-                                    columns.Bound(p => p.Experience).Width(100);
-                                    columns.Bound(p => p.Location).Width(100);
-                                    columns.Bound(p => p.NoOfVacancies).Width(100);
-                                    columns.Bound(p => p.ClosingDate).Width(100);
-                                    columns.Bound(p => p.Status).Width(100);
-                                    columns.Command(command => { command.Edit(); }).Width(160);
-                                })
+                        {
+                            columns.Bound(p => p.DemandID).Width(100);
+                            columns.Bound(p => p.Position).Width(100);
+                            columns.Bound(p => p.Experience).Width(100);
+                            columns.Bound(p => p.Location).Width(100);
+                            columns.Bound(p => p.NoOfVacancies).Width(100);
+                            columns.Bound(p => p.ClosingDate).Width(100);
+                            columns.Bound(p => p.Status).Width(100);
+                            columns.Command(command => { command.Edit(); }).Width(160);
+                        })
                         .Height(500)
                         .Editable(editable => editable.Mode(GridEditMode.InLine))
                         .Pageable()

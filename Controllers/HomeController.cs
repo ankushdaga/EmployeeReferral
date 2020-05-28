@@ -81,10 +81,10 @@ namespace ReferralSystem.Controllers
 
         public IActionResult Demands_Read([DataSourceRequest]DataSourceRequest request)
         {
-            List<DemandModel> demands = new List<DemandModel>();
+            List<Demand> demands = new List<Demand>();
 
-            demands.Add(new DemandModel() { Experience = "10", ClosingDate = "13/12/21", NoOfVacancies="5", Position ="SSC" });
-            demands.Add(new DemandModel() { Experience = "5", ClosingDate = "06/01/20", NoOfVacancies = "1", Position = "SC" });
+            demands.Add(new Demand() { Experience = "10", ClosingDate = "13/12/21", NoOfVacancies="5", Position ="SSC" });
+            demands.Add(new Demand() { Experience = "5", ClosingDate = "06/01/20", NoOfVacancies = "1", Position = "SC" });
 
             return Json(demands.ToDataSourceResult(request));
         }
