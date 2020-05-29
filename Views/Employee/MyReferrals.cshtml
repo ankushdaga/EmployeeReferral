@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewData["Title"] = "MyReferrals";
+}
+@using Kendo.Mvc
+@using Kendo.Mvc.UI
+@model ProfileModel
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <button type="submit" onclick="return showDetails();" class="btn btn-success float-right">Refer</button>
+    </div>
+    <br/>
+    <br/>
+    @Html.HiddenFor(x=>x.JobID)
+    @(Html.Kendo().Grid<ProfileModel>
+                                        ()
+                                        .Name("grid")
+                                        .ColumnMenu(col => col.Filterable(false))
+                                        .Columns(columns =>
+                                        {
+                                            columns.Bound(p => p.Id).Hidden(true);
+
+                                            columns.Bound(p => p.JobID).Title("JobId").Width(100);
+                                            columns.Bound(p => p.BlobURI).Hidden(true);
+                                            columns.Bound(p => p.CandidateName).Title("Name").Width(100);
+                                            columns.Bound(p => p.ProfileStatus).Title("Status").Width(70);
+                                            //columns.Command(command => command.Edit()).Width(150);
+                                            columns.Command(command => command.Custom("Update Status").Click("updateStatus")).Width(70);
+
+                                            columns.Command(command => command.Custom("Download").Click("downloadFile")).Width(70);
+
+
+
+                                            //columns.Bound(p => p.AdditionalDetails).ClientTemplate("<a href='" + @Html.Raw(Url.Action("DownloadResume", "Home") + "?#= BlobURI #'") + ">Download</a>");
+                                        })
+
+
+                                        .Height(500).Width(1200)
+                                        .Editable(editable => editable.Mode(GridEditMode.InLine))
+                                        .Pageable()
+                                        .Sortable()
+                                        .Navigatable()
+                                        .Resizable(r => r.Columns(true))
+                                        .Reorderable(r => r.Columns(true))
+                                        .Groupable(g => g.ShowFooter(false))
+                                        .Filterable()
+                                        .Scrollable()
+                                        .DataSource(dataSource => dataSource
+                                        .Ajax()
+                                        .Batch(true)
+                                            .Model(model =>
+                                            {
+                                                model.Field(p => p.JobID).Editable(false);
+                                                model.Field(p => p.CandidateName).Editable(false);
+
+                                                model.Field(p => p.CandidateName).DefaultValue(
+                                                    ViewData["defaultCategory"] as ReferralSystem.Models.Status);
+                                            })
+                                        .PageSize(20)
+                                        .AutoSync(true)
+                                        .ServerOperation(false)
+                                        .Events(events => events.Error("error_handler"))
+                                            .Read("GetAllReferrals", "Employee", new { AdditionalParam = Model.JobID })))
+
+
+
+    @(Html.Kendo().Window().Name("Details")
+                  .Title("Refer Candidate").Content(@<text>
+                    <div id="wndContent">
+
+                    </div>
+                </text>)
+                              .Visible(false)
+                              .Modal(true)
+                              .Draggable(true)
+                              .Width(600)
+                              .Height(500)
+          )
+    
+    @(Html.Kendo().Window().Name("statusUpdate")
+          .Title("Update Status").Content(@<text>
+                                                <div id="wndContent1">
+
+                                                </div>
+                                             </text>)
+          .Visible(false)
+          .Modal(true)
+          .Draggable(true)
+          .Width(600)
+          .Height(500)
+          )
+</div>
+
+    <script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+        }
+
+        function updateStatus(e) {
+            debugger;
+            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+            var wnd = $("#statusUpdate").data("kendoWindow");
+
+            $('#wndContent1').load('/Employee/UpdateReferralStatus/', { id: dataItem.Id, status: dataItem.ProfileStatus }, function (response, status, xhr) {
+
+            wnd.open().center();
+        });
+       // wnd.content(detailsTemplate(dataItem));
+        wnd.center().open();
+    }
+
+        function showDetails() {
+
+        var wnd = $("#Details").data("kendoWindow");
+
+        $('#wndContent').load('/Employee/ReferCandidate/', { id: '@Model.JobID'}, function (response, status, xhr) {
+
+            wnd.open().center();
+            });
+         wnd.content(detailsTemplate(dataItem));
+         wnd.center().open();
+    }
+
+    function downloadFile(e) {
+
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var wnd = $("#Details").data("kendoWindow");
+
+        window.location = '@Url.Action("DownloadResume", "Home", new { blobUri = "ID"  })'.replace("ID", dataItem.BlobURI);
+
+        //wnd.content(detailsTemplate(dataItem));
+        // wnd.center().open();
+    }
+
+    function returnFalse() {
+        return false;
+    }
+    </script>
+
+
+    <style>
+        .k-grid tr .checkbox-align {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .product-photo {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-size: 32px 35px;
+            background-position: center center;
+            vertical-align: middle;
+            line-height: 32px;
+            box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+            margin-right: 5px;
+        }
+
+        .product-name {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 32px;
+            padding-left: 3px;
+        }
+
+        .k-rating-container .k-rating-item {
+            padding: 4px 0;
+        }
+
+            .k-rating-container .k-rating-item .k-icon {
+                font-size: 16px;
+            }
+
+        .dropdown-country-wrap {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+            .dropdown-country-wrap img {
+                margin-right: 10px;
+            }
+
+        #grid .k-grid-edit-row > td > .k-rating {
+            margin-left: 0;
+            width: 100%;
+        }
+    </style>
+
+

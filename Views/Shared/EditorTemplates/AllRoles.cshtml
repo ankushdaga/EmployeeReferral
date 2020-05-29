@@ -1,0 +1,16 @@
+﻿@using Kendo.Mvc.UI
+@model ProfileModel
+@(Html.Kendo().DropDownListFor(x=>x.ProfileStatus)
+      //.Name("ProfileStatus")
+      .DataTextField("Text")
+      .DataValueField("Value")
+      .OptionLabel("Select Type...")
+      .DataSource(source =>
+      {
+          source.Read(read =>
+          {
+              read.Action("RemoteDataSource_GetProducts", "Employee");
+          });
+      }))
+
+

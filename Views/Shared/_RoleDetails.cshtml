@@ -1,0 +1,98 @@
+@using Kendo.Mvc.UI
+@model UserModel
+
+@using (Html.BeginForm("UpdateRoles", "Home", FormMethod.Post, new { @id = "form2" , enctype = "multipart/form-data"  }))
+{
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-3">
+                @Html.DisplayFor(m => m.DisplayName)
+                @Html.HiddenFor(m => m.DisplayName)
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-3">
+                @Html.DisplayFor(m => m.EmailId)
+                @Html.HiddenFor(m => m.EmailId)
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.RoleName, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-4">
+                @(Html.Kendo().DropDownListFor(x => x.RoleName)
+                      .HtmlAttributes(new {@style = "font-size:12px"})
+                      .DataTextField("Text")
+                      .DataValueField("Value")
+                      .BindTo(new List<SelectListItem>()
+                      {
+                          new SelectListItem()
+                          {
+                              Text = "Employee",
+                              Value = "Employee"
+                          },
+                          new SelectListItem()
+                          {
+                              Text = "Recruiter",
+                              Value = "Recruiter"
+                          },
+                          new SelectListItem()
+                          {
+                              Text = "HR",
+                              Value = "HR"
+                          }
+                      }))
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+            <div class="col-md-2">
+                @*<input style="margin-left: 30px" type="submit" value="Save" class="btn btn-success" />*@
+                <button type="button" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+}  
+
+<script>
+    function validateForm() {
+        debugger;
+        if ($('#filedata').val() === "") {
+            $('#MonoErrorMessage').text("Please select a file").css('color', 'red');
+            $('#MonoErrorMessage').show();
+            event.preventDefault();
+        } else {
+            $('#MonoErrorMessage').text("");
+        }
+
+       
+    }
+</script>

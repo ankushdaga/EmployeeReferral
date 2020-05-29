@@ -10,7 +10,7 @@
 
 @(Html.Kendo().Grid<Employee>
                         ()
-                        .Name("grid")
+                        .Name("gridEmployee")
                         .ColumnMenu(col => col.Filterable(false))
                         .Columns(columns =>
                         {
@@ -43,7 +43,7 @@
                             .Read("GetAllPositions", "Employee")))
 
 
-@(Html.Kendo().Window().Name("Details")
+@*@(Html.Kendo().Window().Name("Details")
       .Title("Refer Candidate").Content(@<text>
                                              <div id="wndContent">
 
@@ -53,8 +53,8 @@
       .Modal(true)
       .Draggable(true)
       .Width(600)
-      .Height(300)
-      )
+      .Height(500)
+      )*@
 
 <script type="text/javascript">
     function error_handler(e) {
@@ -72,18 +72,24 @@
     }
 
 
+
+
     function showDetails(e) {
-        e.preventDefault();
-        debugger;
+     
         var pwrid = $(this)[0].JobId;
 
         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
         var wnd = $("#Details").data("kendoWindow");
 
-        $('#wndContent').load('/Employee/ReferCandidate/', { id: dataItem.JobId, bu: dataItem.BusinessUnit}, function (response, status, xhr) {
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var wnd = $("#Details").data("kendoWindow");
+
+        window.location = '@Url.Action("MyReferrals", "Employee", new { jobId = "ID"  })'.replace("ID", dataItem.JobId);
+
+        //$('#wndContent').load('/Employee/ReferCandidate/', { id: dataItem.JobId, bu: dataItem.BusinessUnit}, function (response, status, xhr) {
             
-            wnd.open().center();
-            });
+        //    wnd.open().center();
+        //    });
         //wnd.content(detailsTemplate(dataItem));
        // wnd.center().open();
     }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -27,8 +28,21 @@ namespace ReferralSystem.Models
 
         public DateTime ClosingDate { get; set; }
 
-        [DisplayName("Upload Resume")]
+        [DisplayName("Upload")]
         public IFormFile File { get; set; }
 
-    }
+        [Required]
+        [DisplayName("Name")]
+        public string CandidateName { get; set; }
+
+        [Required]
+        [DisplayName("Surname")]
+        public string CandidateSurname { get; set; }
+
+        [Required]
+        [DisplayName("DOB")]
+        public DateTime CandidateDOB { get; set; }
+
+
+}
 }

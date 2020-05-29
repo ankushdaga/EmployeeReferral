@@ -1,0 +1,106 @@
+@using Kendo.Mvc.UI
+@model ProfileModel
+
+
+    <div class="form-horizontal">
+
+  
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+  @Html.HiddenFor(x=>x.Id)
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.CandidateName, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-6">
+                @Html.DisplayFor(m => m.CandidateName, new { @class = "form-control" })
+ 
+            </div>
+        </div>
+    </div>
+    
+        @(Html.Kendo().DropDownListFor(x=>x.ProfileStatus)
+              //.Name("ProfileStatus")
+              .DataTextField("Text")
+              .DataValueField("Value")
+              .OptionLabel("Select Type...")
+              .DataSource(source =>
+              {
+                  source.Read(read =>
+                  {
+                      read.Action("RemoteDataSource_GetProducts", "Employee");
+                  });
+              }))
+       
+        <div class="form-group">
+        
+           
+                <button type="submit" onclick="return validateForm();" class="btn btn-success float-right">Save</button>
+                <div class="col-md-2">
+                </div>
+                @*<input style="margin-left: 30px" type="submit" value="Save" class="btn btn-success" />*@
+                <button type="button" class="btn btn-secondary float-right" id="cancel" style="margin-right:20px">Cancel</button>
+          
+       
+
+    </div>
+</div>
+
+
+<script>
+
+
+    function validateForm() {
+        debugger;
+        if ($('#ProfileStatus').val() === "" ) {
+            $('#MonoErrorMessage').text("Please select status").css('color', 'red');
+            $('#MonoErrorMessage').show();
+            event.preventDefault();
+        } else {
+            $('#MonoErrorMessage').text("");
+        }
+
+        var data = $("#ProfileStatus").data("kendoDropDownList");
+
+        $.ajax
+        ({ 
+            url: "/Employee/SaveReferralStatus",
+                data: { "Id": $('#Id').val(), "ProfileStatus": data.text()},
+            type: 'post',
+            success: function(result)
+            {
+                $("#statusUpdate").data("kendoWindow").close();
+
+            }
+        });
+    }
+
+    $("#cancel").click(function(){
+        $("#statusUpdate").data("kendoWindow").close();
+     
+    })
+</script>
+
+<style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+</style>

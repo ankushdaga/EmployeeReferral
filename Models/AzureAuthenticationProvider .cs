@@ -17,7 +17,7 @@ namespace ReferralSystem.Models
         private string appKey = "";
         private string aadInstance = "";
 
-        public async Task AuthenticateRequestAsync(HttpRequestMessage request)
+        public async Task AuthenticateRequestAsync(HttpRequestMessage request)  
         {
             string clientId = "76b04c1f-2db1-4c60-b7a5-4022369018ab";
             string clientSecret = "ykUxQNDCLWBsk41vv_09-N36o1i~Hpl3F-";

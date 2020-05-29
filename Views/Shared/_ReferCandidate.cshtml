@@ -1,9 +1,11 @@
+@using Kendo.Mvc.UI
 @model Employee
 
 @using (Html.BeginForm("UploadReferral", "Employee", FormMethod.Post, new { @id = "form1" , enctype = "multipart/form-data"  }))
 {
+    @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
+    <div class="form-horizontal">
 
     <div class="form-group">
         <div class="row">
@@ -12,40 +14,82 @@
             </div>
             <div class="col-md-3">
                 @Html.DisplayFor(m => m.JobId)
+                @Html.HiddenFor(m => m.JobId)
+
+            </div>
+        </div>
+    </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.CandidateName, htmlAttributes: new { @class = "control-label" })&nbsp;*
+            </div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.CandidateName, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.CandidateName, "", new { @class = "text-danger", style = "font-weight: bold;" , required = "required" })
+               
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.CandidateSurname, htmlAttributes: new { @class = "control-label" })&nbsp;*
+            </div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.CandidateSurname, new { @class = "form-control" })
+              
+
+                 
+                @*@Html.ValidationMessageFor(model => model.CandidateSurname, "", new { @class = "text-danger", style = "font-weight: bold;" })*@
+
             </div>
         </div>
     </div>
     
-   
     <div class="form-group">
         <div class="row">
             <div class="col-md-3">
-                @Html.LabelFor(model => model.File, htmlAttributes: new {@class = "control-label"})
+                @Html.LabelFor(model => model.CandidateDOB, htmlAttributes: new { @class = "control-label" })&nbsp;*
             </div>
             <div class="col-md-4">
-                @Html.TextBoxFor(m => m.File, new {type = "file" ,  @id = "filedata" })
+                @Html.Kendo().DatePickerFor(m => m.CandidateDOB).Value("10/10/2011").HtmlAttributes(new { style = "width: 100%", title = "datepicker" , value = "" , required = "required" })</div>
+           
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label" })&nbsp;*
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.File, new { type = "file", @id = "filedata" , @class = "btn btn-default btn-file" })
             </div>
         </div>
     </div>
     <div class="row">
         <br />
-        <div class="col-md-3">
-        <span id="MonoErrorMessage"></span>
+        <div class="col-md-8">
+            <span id="MonoErrorMessage"></span>
         </div>
     </div>
-    <br />
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" onclick = "return validateForm();" class="btn btn-success">Save</button>
-            </div>
-            <div class="col-md-2">
+       
+        <div class="form-group">
+        
+           
+                <button type="submit" onclick="return validateForm();" class="btn btn-success float-right">Save</button>
+                <div class="col-md-2">
+                </div>
                 @*<input style="margin-left: 30px" type="submit" value="Save" class="btn btn-success" />*@
-                <button type="button" class="btn btn-secondary">Cancel</button>
-            </div>
-        </div>
+                <button type="button" class="btn btn-secondary float-right" id="cancel" style="margin-right:20px">Cancel</button>
+          
+       
 
     </div>
 </div>
@@ -54,8 +98,8 @@
 <script>
     function validateForm() {
         debugger;
-        if ($('#filedata').val() === "") {
-            $('#MonoErrorMessage').text("Please select a file").css('color', 'red');
+        if ($('#filedata').val() === "" || $('#CandidateDOB').val() === "" || $('#CandidateSurname').val() === "" || $('#CandidateName').val() === "") {
+            $('#MonoErrorMessage').text("Please submit all required fields").css('color', 'red');
             $('#MonoErrorMessage').show();
             event.preventDefault();
         } else {
@@ -64,4 +108,31 @@
 
        
     }
+
+    $("#cancel").click(function(){
+        $("#Details").data("kendoWindow").close();
+     
+    })
 </script>
+
+<style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+</style>

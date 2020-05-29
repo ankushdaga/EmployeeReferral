@@ -1,36 +1,57 @@
 ﻿
 @using Microsoft.Graph
-@model List<User>
+@model List<UserModel>
 @using Kendo.Mvc
 @using Kendo.Mvc.UI
 
-@*@(Html.Kendo().Grid<UserModel>
+@(Html.Kendo().Grid<UserModel>
                     ()
                     .Name("grid")
                     .ColumnMenu(col => col.Filterable(false))
                     .Columns(columns =>
-                            {
-                                columns.Bound(p => p.DisplayName).Width(100);
-                                columns.Command(command => { command.Edit(); command.Destroy(); }).Width(160);
-                            })
+                    {
+                        columns.Bound(p => p.DisplayName).Width(200);
+                        columns.Bound(p => p.EmailId).Width(200);
+                        columns.Bound(p => p.RoleName).Width(200);
+                        //.ClientTemplate("#=Role.RoleName#");
+                        columns.Command(command => command.Custom("Update Role").Click("showRoles")).Width(180);
+
+                       // columns.Command(command => { command.Edit(); }).Width(160);
+                    })
                     .Height(500)
-                    .Editable(editable => editable.Mode(GridEditMode.PopUp))
-                    .Pageable()
-                    .Sortable()
-                    .Navigatable()
-                    .Resizable(r => r.Columns(true))
-                    .Reorderable(r => r.Columns(true))
-                    .Groupable(g => g.ShowFooter(false))
-                    .Filterable()
-                    .Scrollable()
-                    .DataSource(dataSource => dataSource  
+      .Scrollable()
+        .ToolBar(t => t.Search())
+		.Sortable()
+		.Pageable(pageable => pageable
+			.Refresh(true)
+			.PageSizes(true)
+			.ButtonCount(5))
+                    .DataSource(dataSource => dataSource
+
                     .Ajax()
                     .Batch(true)
                     .PageSize(20)
                     .AutoSync(true)
                     .ServerOperation(false)
                     .Events(events => events.Error("error_handler"))
-                        .Read("Users_Read", "Home")))
+                       
+                        .Read("Manage_Roles", "Home")))
+
+
+
+@(Html.Kendo().Window().Name("RoleDetails")
+      .Title("Update Role").Content(@<text>
+                                            <div id="roleContent">
+
+                                            </div>
+                                         </text>)
+      .Visible(false)
+      .Modal(true)
+      .Draggable(true)
+      .Width(600)
+      .Height(300)
+      )
+
 
 <script type="text/javascript">
     function error_handler(e) {
@@ -45,6 +66,22 @@
             });
             alert(message);
         }
+    }
+
+    function showRoles(e) {
+        e.preventDefault();
+        debugger;
+        var pwrid = $(this)[0].JobId;
+
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var wnd = $("#RoleDetails").data("kendoWindow");
+
+        $('#roleContent').load('/Home/UpdateRole/', { id: dataItem.DisplayName, bu: dataItem.RoleName, emailId: dataItem.EmailId}, function (response, status, xhr) {
+            
+            wnd.open().center();
+        });
+        //wnd.content(detailsTemplate(dataItem));
+        // wnd.center().open();
     }
 
     function onDataBound(e) {
@@ -64,7 +101,7 @@
                 value: text,
             });
 
-
+        
             kendo.bind($(this), dataItem);
         });
     }
@@ -124,6 +161,6 @@
         margin-left: 0;
         width: 100%;
     }
-</style>*@
+</style>
 
 
