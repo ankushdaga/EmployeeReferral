@@ -31,11 +31,13 @@ namespace ReferralSystem.Repository
 
         public List<TDocument> Get()
         {
-            return _collection.Find(book => true).ToList();
+           var alldocuments=  _collection.Find(new BsonDocument()).ToList();
+
+            return alldocuments;
         }
           
-
-        public virtual IQueryable<TDocument> AsQueryable()
+            
+        public IQueryable<TDocument> AsQueryable()
         {
             return _collection.AsQueryable();
         }
