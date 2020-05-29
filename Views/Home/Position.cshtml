@@ -1,0 +1,130 @@
+﻿
+@using Kendo.Mvc.UI
+@using ReferralSystem.Models
+
+@(Html.Kendo().Grid<Position>
+                        ()
+                        .Name("gridPositions")
+                        .ColumnMenu(col => col.Filterable(false))
+                        .Columns(columns =>
+                        {
+                            columns.Bound(p => p.Role).Width(100);
+                            columns.Bound(p => p.Experience).Width(100);
+                            columns.Bound(p => p.Location).Width(100);
+                            columns.Bound(p => p.NoOfVacancies).Width(120);
+                            columns.Bound(p => p.ClosingDate).Width(100);
+                            columns.Command(command => { command.Edit(); }).Width(100);
+                        })
+                        .Height(500)
+                        .Editable(editable => editable.Mode(GridEditMode.InLine))
+                        .Pageable()
+                        .Sortable()
+                        .Navigatable()
+                        .Resizable(r => r.Columns(true))
+                        .Reorderable(r => r.Columns(true))
+                        .Groupable(g => g.ShowFooter(false))
+                        .Filterable()
+                        .Scrollable()
+                        .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Batch(true)
+                        .PageSize(20)
+                        .AutoSync(true)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                            .Read("Positions_Read", "Home")))
+
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+
+    function onDataBound(e) {
+        var grid = this;
+        grid.table.find("tr").each(function () {
+            var dataItem = grid.dataItem(this);
+            debugger;
+            var type = dataItem.Discontinued ? 'success' : 'error';
+            var text = dataItem.Discontinued ? 'available' : 'not available';
+
+            $(this).find('script').each(function () {
+                eval($(this).html());
+            });
+
+            $(this).find(".badgeTemplate").kendoBadge({
+                type: type,
+                value: text,
+            });
+
+
+            kendo.bind($(this), dataItem);
+        });
+    }
+
+    function returnFalse() {
+        return false;
+    }
+</script>
+
+
+<style>
+    .k-grid tr .checkbox-align {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .product-photo {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-size: 32px 35px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 32px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-right: 5px;
+    }
+
+    .product-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        padding-left: 3px;
+    }
+
+    .k-rating-container .k-rating-item {
+        padding: 4px 0;
+    }
+
+        .k-rating-container .k-rating-item .k-icon {
+            font-size: 16px;
+        }
+
+    .dropdown-country-wrap {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+        .dropdown-country-wrap img {
+            margin-right: 10px;
+        }
+
+    #grid .k-grid-edit-row > td > .k-rating {
+        margin-left: 0;
+        width: 100%;
+    }
+</style>
+

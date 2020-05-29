@@ -9,19 +9,22 @@ using ReferralSystem.Service;
 
 namespace ReferralSystem.Models
 {
-    public class Position
+    [BsonCollection("Positions")]
+    public class Position:Document
     {
-       public string DemandID { get; set; }
-       public string BusinessUnit { get; set; }
+        public string DemandId { get; set; }
+        public string BusinessUnit { get; set; }
        public string ProjectName { get; set; }
        public string Role { get; set; }
        public string Band { get; set; }
        public string Experience { get; set; }
        public string Location { get; set; }
        public string NoOfVacancies { get; set; }
-       public string RequesterEmail { get; set; }
+       public string RequesterEmailID { get; set; }
        public string DemandDate { get; set; }
        public string ClosingDate { get; set; }
        public string Status { get; set; }
+        public string JobDescription { get; set; }
+        public string Skills { get; set; }
     }
 }

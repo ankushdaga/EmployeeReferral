@@ -8,6 +8,7 @@ using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using ReferralSystem.Models;
+using ReferralSystem.Repository;
 
 namespace ReferralSystem.Controllers
 {
@@ -83,10 +84,79 @@ namespace ReferralSystem.Controllers
         {
             List<Demand> demands = new List<Demand>();
 
-            demands.Add(new Demand() { Experience = "10", ClosingDate = "13/12/21", NoOfVacancies="5", Position ="SSC" });
-            demands.Add(new Demand() { Experience = "5", ClosingDate = "06/01/20", NoOfVacancies = "1", Position = "SC" });
+            var _mongoRepository = new MongoRepository<Demand>(new MongoDbSettings { DatabaseName = "EmployeeReferralDb", ConnectionString = "mongodb://localhost:27017" });
+            demands = _mongoRepository.Get();
 
             return Json(demands.ToDataSourceResult(request));
         }
+
+        [HttpGet]
+        public async Task<ActionResult> Position()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CreatePosition(string id)
+        {
+            var _mongoRepository = new MongoRepository<Demand>(new MongoDbSettings { DatabaseName = "EmployeeReferralDb", ConnectionString = "mongodb://localhost:27017" });
+            var demand = _mongoRepository.FindById(id);
+
+            return View(demand);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DemandDetails(string id)
+        {
+            var _mongoRepository = new MongoRepository<Demand>(new MongoDbSettings { DatabaseName = "EmployeeReferralDb", ConnectionString = "mongodb://localhost:27017" });
+            var demand = _mongoRepository.FindById(id);
+
+            return View(demand);
+        }
+
+        public JsonResult DemandIds_Read()
+        {
+            var _mongoRepository = new MongoRepository<Demand>(new MongoDbSettings { DatabaseName = "EmployeeReferralDb", ConnectionString = "mongodb://localhost:27017" });
+            var demands = _mongoRepository.Get();
+
+            return Json(demands);
+        }
+
+        [HttpPost]
+        public ActionResult SavePosition(Demand demand)
+        {
+            Position _position = new Position()
+            {
+                Band = demand.Band,
+                BusinessUnit = demand.BusinessUnit,
+                ClosingDate = demand.ClosingDate,
+                DemandDate = demand.DemandDate,
+                Experience = demand.Experience,
+                Location = demand.Location,
+                NoOfVacancies = demand.NoOfVacancies,
+                ProjectName = demand.ProjectName,
+                RequesterEmailID = demand.RequesterEmailID,
+                Role = demand.Role,
+                Status = demand.Status,
+                DemandId = demand.DemandId,
+                Skills = demand.Skills,
+                JobDescription = demand.JobDescription
+            };
+
+            var _mongoRepository = new MongoRepository<Position>(new MongoDbSettings { DatabaseName = "EmployeeReferralDb", ConnectionString = "mongodb://localhost:27017" });
+            _mongoRepository.InsertOne(_position);
+
+            return RedirectToAction("Position");
+
+        }
+
+        public IActionResult Positions_Read([DataSourceRequest]DataSourceRequest request)
+        {
+            var _mongoRepository = new MongoRepository<Position>(new MongoDbSettings { DatabaseName = "EmployeeReferralDb", ConnectionString = "mongodb://localhost:27017" });
+            var demands = _mongoRepository.Get();
+
+            return Json(demands.ToDataSourceResult(request));
+        }
+
     }
 }

@@ -2,41 +2,125 @@
 @using Kendo.Mvc.UI
 @using ReferralSystem.Models
 
+@{
+    ViewData["Title"] = "Demands";
+}
+
+<h1>Demands</h1>
+
 @(Html.Kendo().Grid<Demand>
-                        ()
-                        .Name("gridDemands")
-                        .ColumnMenu(col => col.Filterable(false))
-                        .Columns(columns =>
-                        {
-                            columns.Bound(p => p.DemandID).Width(100);
-                            columns.Bound(p => p.Position).Width(100);
-                            columns.Bound(p => p.Experience).Width(100);
-                            columns.Bound(p => p.Location).Width(100);
-                            columns.Bound(p => p.NoOfVacancies).Width(100);
-                            columns.Bound(p => p.ClosingDate).Width(100);
-                            columns.Bound(p => p.Status).Width(100);
-                            columns.Command(command => { command.Edit(); }).Width(160);
-                        })
-                        .Height(500)
-                        .Editable(editable => editable.Mode(GridEditMode.InLine))
-                        .Pageable()
-                        .Sortable()
-                        .Navigatable()
-                        .Resizable(r => r.Columns(true))
-                        .Reorderable(r => r.Columns(true))
-                        .Groupable(g => g.ShowFooter(false))
-                        .Filterable()
-                        .Scrollable()
-                        .DataSource(dataSource => dataSource
-                        .Ajax()
-                        .Batch(true)
-                        .PageSize(20)
-                        .AutoSync(true)
-                        .ServerOperation(false)
-                        .Events(events => events.Error("error_handler"))
-                            .Read("Demands_Read", "Home")))
+                                            ()
+                                            .Name("gridDemands")
+                                            .ColumnMenu(col => col.Filterable(false))
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(p => p.Id).Visible(false);
+                                                columns.Bound(p => p.BusinessUnit).Width(100);
+                                                columns.Bound(p => p.Role).Width(100);
+                                                columns.Bound(p => p.Experience).Width(100);
+                                                columns.Bound(p => p.Location).Width(100);
+                                                columns.Bound(p => p.NoOfVacancies).Width(120);
+                                                columns.Bound(p => p.ClosingDate).Width(100);
+                                                columns.Command(command =>
+                                                {
+                                                    command.Custom("Create Position").Click("CreatePosition");
+                                                    command.Custom("View Demand").Click("ViewDemand");
+                                                }).Width(120);
+                                            })
+                                            .Height(500)
+                                            .Editable(editable => editable.Mode(GridEditMode.PopUp))
+                                            .Pageable()
+                                            .Sortable()
+                                            .Navigatable()
+                                            .Resizable(r => r.Columns(true))
+                                            .Reorderable(r => r.Columns(true))
+                                            .Groupable(g => g.ShowFooter(false))
+                                            .Filterable()
+                                            .Scrollable()
+                                            .DataSource(dataSource => dataSource
+                                            .Ajax()
+                                            .Batch(true)
+                                            .PageSize(20)
+                                            .AutoSync(true)
+                                            .ServerOperation(false)
+                                            .Events(events => events.Error("error_handler"))
+                                                .Read("Demands_Read", "Home")))
+
+@(Html.Kendo().Window().Name("Details")
+                    .Title("Demand Details")
+                    .Visible(false)
+                    .Modal(true)
+                    .Draggable(true)
+                    .Width(300)
+)
+
+<script type="text/x-kendo-template" id="template">
+    <div id="details-container">
+        <dl>
+            <dt>
+                Demand Id: #= DemandId #
+            </dt>
+            <dt>
+                Business Unit: #= BusinessUnit #
+            </dt>
+            <dt>
+                Project Name: #= ProjectName #
+            </dt>
+            <dt>
+                Role: #= Role #
+            </dt>
+            <dt>
+                Band: #= Band #
+            </dt>
+            <dt>
+                Experience: #= Experience #
+            </dt>
+            <dt>
+                Location: #= Location #
+            </dt>
+            <dt>
+                No Of Vacancies: #= NoOfVacancies #
+            </dt>
+            <dt>
+                Demand Date: #= DemandDate #
+            </dt>
+            <dt>
+                ClosingDate: #= ClosingDate #
+            </dt>
+            <dt>
+                Status: #= Status #
+            </dt>
+            <dt>
+                Job Description: #= JobDescription #
+            </dt>
+            <dt>
+                Skills: #= Skills #
+            </dt>
+        </dl>
+    </div>
+</script>
 
 <script type="text/javascript">
+
+    function CreatePosition(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+        var url = '@Url.Action("CreatePosition", "Home")?Id=' + dataItem.Id;
+        window.location.href = url;
+    };
+
+    var detailsTemplate = kendo.template($("#template").html());
+
+    function ViewDemand(e) {
+        e.preventDefault();
+
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var wnd = $("#Details").data("kendoWindow");
+
+        wnd.content(detailsTemplate(dataItem));
+        wnd.center().open();
+    }
     function error_handler(e) {
         if (e.errors) {
             var message = "Errors:\n";
@@ -129,4 +213,8 @@
         width: 100%;
     }
 </style>
+
+
+
+
 
