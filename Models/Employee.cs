@@ -32,16 +32,16 @@ namespace ReferralSystem.Models
         public IFormFile File { get; set; }
 
         [Required]
-        [DisplayName("Name")]
+        [DisplayName("First Name")]
         public string CandidateName { get; set; }
 
         [Required]
-        [DisplayName("Surname")]
+        [DisplayName("Last Name")]
         public string CandidateSurname { get; set; }
 
         [Required]
-        [DisplayName("DOB")]
-        public DateTime CandidateDOB { get; set; }
+        [DisplayName("Mobile No.")]
+        public string MobileNumber { get; set; }
 
 
 }

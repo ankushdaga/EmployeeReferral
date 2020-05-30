@@ -24,7 +24,8 @@ namespace ReferralSystem.Models
        public DateTime DemandDate { get; set; }
        public DateTime ClosingDate { get; set; }
        public string Status { get; set; }
-        public string JobDescription { get; set; }
-        public string Skills { get; set; }
+       public string JobDescription { get; set; }
+       public string Skills { get; set; }
+
     }
 }

@@ -21,9 +21,11 @@
                             columns.Bound(p => p.Location).Width(100);
                             columns.Bound(p => p.NoOfVacancies).Width(100);
                             // columns.Bound(p => p.ClosingDate).Width(100);
+
                             columns.Command(command => command.Custom("Refer").Click("showDetails")).Width(180);
                         })
                         .Height(500).Width(1200)
+                        .ToolBar(t => t.Search())
                         .Editable(editable => editable.Mode(GridEditMode.PopUp))
                         .Pageable()
                         .Sortable()

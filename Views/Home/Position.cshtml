@@ -8,18 +8,22 @@
                         .ColumnMenu(col => col.Filterable(false))
                         .Columns(columns =>
                         {
+                            columns.Bound(p => p.JobId).Width(100);
                             columns.Bound(p => p.Role).Width(100);
                             columns.Bound(p => p.Experience).Width(100);
                             columns.Bound(p => p.Location).Width(100);
                             columns.Bound(p => p.NoOfVacancies).Width(120);
-                            columns.Bound(p => p.ClosingDate).Width(100);
+                            columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
+
                             columns.Command(command => { command.Edit(); }).Width(100);
+                            columns.Command(command => command.Custom("Referrals").Click("showAllReferrals")).Width(180);
                         })
                         .Height(500)
                         .Editable(editable => editable.Mode(GridEditMode.InLine))
                         .Pageable()
                         .Sortable()
                         .Navigatable()
+                         .ToolBar(t => t.Search())
                         .Resizable(r => r.Columns(true))
                         .Reorderable(r => r.Columns(true))
                         .Groupable(g => g.ShowFooter(false))
@@ -47,6 +51,14 @@
             });
             alert(message);
         }
+    }
+
+    function showAllReferrals(e) {
+
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+        window.location = '@Url.Action("MyReferrals", "Employee", new { jobId = "ID"  })'.replace("ID", dataItem.JobId);
+
     }
 
     function onDataBound(e) {

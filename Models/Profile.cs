@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +15,11 @@ namespace ReferralSystem.Models
     [BsonCollection("Profile")]
     public class ProfileModel : Document
     {
-       public string CandidateName { get; set; }
-       public string CandidateSurname { get; set; }
-       public DateTime CandidateDOB { get; set; }
+        [DisplayName("First Name")]
+        public string CandidateName { get; set; }
+        [DisplayName("Last Name")]
+        public string CandidateSurname { get; set; }
+       public string MobileNumber { get; set; }
        public string BlobURI { get; set; }
        public string AdditionalDetails { get; set; }
        public string ReferredBy { get; set; }

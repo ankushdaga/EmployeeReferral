@@ -1,9 +1,14 @@
 @using Kendo.Mvc.UI
 @model Employee
 
+@*<script type="text/javascript" language=javascript>
+    $.validator.unobtrusive.parse(document);
+</script>*@
+
 @using (Html.BeginForm("UploadReferral", "Employee", FormMethod.Post, new { @id = "form1" , enctype = "multipart/form-data"  }))
 {
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
 
     <div class="form-horizontal">
 
@@ -53,10 +58,10 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-3">
-                @Html.LabelFor(model => model.CandidateDOB, htmlAttributes: new { @class = "control-label" })&nbsp;*
+                @Html.LabelFor(model => model.MobileNumber, htmlAttributes: new { @class = "control-label" })&nbsp;*
             </div>
-            <div class="col-md-4">
-                @Html.Kendo().DatePickerFor(m => m.CandidateDOB).Value("10/10/2011").HtmlAttributes(new { style = "width: 100%", title = "datepicker" , value = "" , required = "required" })</div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.MobileNumber, new { @class = "form-control" })</div>
            
         </div>
     </div>
@@ -95,10 +100,36 @@
 </div>
 }  
 
+
 <script>
+
+    function Validate(){
+
+        // returns a promise that can be used later. 
+       return $.ajax
+        ({ 
+            url: "/Employee/ValidateReferral",
+            data: { "Name": $('#CandidateName').val(), "MobNo": $('#MobileNumber').val(), "LastName": $('#CandidateSurname').val()},
+            type: 'post',
+            async: false ,
+            success: function (response) {
+                debugger;
+
+                if (response.success) {
+                    // alert(response.responseText);
+                } else {
+                    event.preventDefault();
+                    // DoSomethingElse()
+                    $('#MonoErrorMessage').text(response.responseText).css('color', 'red');
+                }  
+            }
+        });
+    }
+
+
     function validateForm() {
         debugger;
-        if ($('#filedata').val() === "" || $('#CandidateDOB').val() === "" || $('#CandidateSurname').val() === "" || $('#CandidateName').val() === "") {
+        if ($('#filedata').val() === "" || $('#MobileNumber').val() === "" || $('#CandidateSurname').val() === "" || $('#CandidateName').val() === "") {
             $('#MonoErrorMessage').text("Please submit all required fields").css('color', 'red');
             $('#MonoErrorMessage').show();
             event.preventDefault();
@@ -106,7 +137,16 @@
             $('#MonoErrorMessage').text("");
         }
 
-       
+        Validate().then(function(data) {
+            debugger;
+            // Run this when your request was successful
+            console.log(data)
+        }).catch(function(err) {
+            // Run this when promise was rejected via reject()
+            console.log(err)
+        });
+
+
     }
 
     $("#cancel").click(function(){

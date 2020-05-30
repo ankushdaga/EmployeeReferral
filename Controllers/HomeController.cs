@@ -43,28 +43,26 @@ namespace ReferralSystem.Controllers
         public async  Task<IActionResult> Index()
         {
 
-
-
             if (User.Identity.IsAuthenticated)
             {
                 //var authorization = this.Request.Headers["Authorization"].ToString();
                 //// var tokenstring = authorization.Substring("Bearer ".Length).Trim();
                 //var handler = new JwtSecurityTokenHandler();
 
-                var ss = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-                if (_user.Get().Any(x => x.EmailId.Equals(ss)))
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                if (_user.Get().Any(x => x.EmailId.Equals(userEmail)))
                 {
                     return View();
                 }
                 else
                 {
-                    if (ss != null)
+                    if (userEmail != null)
                     {
                         var bookdata = new UserModel()
                         {
-                            EmailId = ss,
+                            EmailId = userEmail,
                            // Role = "Employee",
-                            DisplayName = ss.Substring(0, ss.IndexOf('@')).Replace('.', ' '),
+                            DisplayName = userEmail.Substring(0, userEmail.IndexOf('@')).Replace('.', ' '),
                             IsActive = "True"
                         };
                         _user.InsertOne(bookdata);
@@ -73,7 +71,6 @@ namespace ReferralSystem.Controllers
 
                     
                 }
-             //   _user.InsertOne(bookdata);
             }
 
             return View();
@@ -89,50 +86,20 @@ namespace ReferralSystem.Controllers
         [HttpGet]
         public async Task<ActionResult> Roles()
         {
-           
+
             return View();
         }
 
-        private void PopulateRoleNames()
-        {
-            var roles = new List<Roles>();
-            roles.Add(new Roles()
-            {
-                RoleName = "Employee",
-                RoleId = 1
-            });
-            roles.Add(new Roles()
-            {
-                RoleName = "Recruiter",
-                RoleId = 2
-
-            });
-
-            ViewData["RoleNames"] = roles;
-
-        }
 
 
-        private IEnumerable<User> Read()
-        {
-            List<User> positions = new List<User>();
-            positions.Add(new User() { DisplayName = "Ankush"});
+        //private IEnumerable<User> Read()
+        //{
+        //    List<User> positions = new List<User>();
+        //    positions.Add(new User() { DisplayName = "Ankush"});
 
-            return positions;
-        }
+        //    return positions;
+        //}
 
-
-        public IActionResult Users_Read([DataSourceRequest]DataSourceRequest request)
-        {
-            List<UserModel> userResult = new List<UserModel>();
-
-            
-
-            //  var abc = GetAllUsers().Result;
-
-
-            return Json(userResult.ToDataSourceResult(request));
-        }
 
         [HttpPost]
         public ActionResult UpdateRoles(UserModel emp)
@@ -164,7 +131,7 @@ namespace ReferralSystem.Controllers
             Uri myUri = new Uri(blobUri, UriKind.Absolute);
 
         string accessKey =
-                "";
+                "DefaultEndpointsProtocol=https;AccountName=referraldocuments;AccountKey=ID4sHh6dof/G8x/Qq83WkvhG4H1hYOi9pI1vxpYasXNtXVERREEv2jcZBWOp0dXmv85wEB9lb6gS2hJrCwylqA==;EndpointSuffix=core.windows.net";
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(accessKey);
             CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("uploads");
@@ -198,53 +165,8 @@ namespace ReferralSystem.Controllers
                 });
             }
 
-            //  PopulateRoleNames();
-
-            var roles = new List<Roles>();
-            roles.Add(new Roles()
-            {
-                RoleName = "Employee",
-                RoleId = 1
-            });
-            roles.Add(new Roles()
-            {
-                RoleName = "Recruiter",
-                RoleId = 2
-
-            });
-
-            ViewData["RoleNames"] =
-                new SelectList(roles, "RoleId", "RoleName");
-
-            //ViewData["RoleNames"] = roles;
-
             return Json(positions.ToDataSourceResult(request));
 
-        }
-
-
-        public async Task<IEnumerable<User>> GetAllUsers()
-        {
-
-            string owner = (User.FindFirst(ClaimTypes.X500DistinguishedName))?.Value;
-
-
-            List<User> userResult = new List<User>();
-
-            GraphServiceClient graphClient = new GraphServiceClient(new AzureAuthenticationProvider());
-
-            IGraphServiceUsersCollectionPage users1 = await graphClient.Users.Request().Top(500).GetAsync(); // The hard coded Top(500) is what allows me to pull all the users, the blog post did this on a param passed in
-
-            IGraphServiceUsersCollectionPage users = await graphClient.Users.Request().Top(500).GetAsync(); // The hard coded Top(500) is what allows me to pull all the users, the blog post did this on a param passed in
-            userResult.AddRange(users);
-
-            while (users.NextPageRequest != null)
-            {
-                users = await users.NextPageRequest.GetAsync();
-                userResult.AddRange(users);
-            }
-
-            return userResult;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -291,6 +213,10 @@ namespace ReferralSystem.Controllers
         [HttpPost]
         public ActionResult SavePosition(Demand demand)
         {
+            int _min = 1000;
+            int _max = 9999;
+            Random _rdm = new Random();
+            var jobId =_rdm.Next(_min, _max);
             Position _position = new Position()
             {
                 Band = demand.Band,
@@ -306,7 +232,8 @@ namespace ReferralSystem.Controllers
                 Status = demand.Status,
                 DemandId = demand.DemandId,
                 Skills = demand.Skills,
-                JobDescription = demand.JobDescription
+                JobDescription = demand.JobDescription,
+                JobId = jobId.ToString()
             };
 
             this._position.InsertOne(_position);

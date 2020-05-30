@@ -31,6 +31,9 @@ namespace ReferralSystem.Controllers
     {
         private readonly IMongoRepository<Employee> _employeeRepo;
 
+        private readonly IMongoRepository<Position> _positionRepo;
+
+
         private readonly IMongoRepository<ProfileModel> _prof;
 
 
@@ -44,11 +47,12 @@ namespace ReferralSystem.Controllers
         }
 
        // private readonly IIdentityService _identityService;
-        public EmployeeController(IMongoRepository<Employee> employeeRepository, IConfiguration configuration , IMongoRepository<ProfileModel> prof)
+        public EmployeeController(IMongoRepository<Employee> employeeRepository, IConfiguration configuration , IMongoRepository<ProfileModel> prof , IMongoRepository<Position> position)
         {
             _employeeRepo = employeeRepository;
             _configuration = configuration;
             _prof = prof;
+            _positionRepo = position;
 
 
         }
@@ -97,10 +101,7 @@ namespace ReferralSystem.Controllers
 
         public IActionResult GetAllPositions([DataSourceRequest]DataSourceRequest request)
         {
-           
-            var empList = _employeeRepo.Get();
-
-
+            var empList = _positionRepo.Get();
             return Json(empList.ToDataSourceResult(request));
         }
 
@@ -114,11 +115,12 @@ namespace ReferralSystem.Controllers
         }
 
 
-        public ActionResult UpdateReferralStatus(string id, string status)
+        public ActionResult UpdateReferralStatus(string id, string status,string name)
         {
             var widgetViewModel = new ProfileModel();
             widgetViewModel.Id = new ObjectId(id);
             widgetViewModel.ProfileStatus = status;
+            widgetViewModel.CandidateName = name;
             // widgetViewModel.BusinessUnit = bu;
 
             return PartialView("_ReferralStatusUpdate", widgetViewModel);
@@ -155,8 +157,31 @@ namespace ReferralSystem.Controllers
             }
 
 
-            return RedirectToAction("MyReferrals" , new { AdditionalParam = entity.JobID });
+            return RedirectToAction("MyReferrals" , new { jobId = entity.JobID });
         }
+
+
+        public JsonResult ValidateReferral(string name, string mobNo,string lastName)
+        {
+            var empList = _prof.Get();
+
+            var isCandidateExist = empList.Where(x =>
+                x.CandidateName.Trim() == name.Trim() && x.CandidateSurname.Trim() == lastName.Trim() &&
+                x.MobileNumber.Trim() == mobNo.Trim());
+
+            if (isCandidateExist.Any())
+            {
+                return Json(new { success = false, responseText = "Candidate is already referred." });
+
+            }
+            else
+            {
+                return Json(new { success = true, responseText = "Candidate does not exist." });
+
+            }
+
+        }
+
 
 
         [HttpPost]
@@ -164,14 +189,21 @@ namespace ReferralSystem.Controllers
         public ActionResult UploadReferral(Employee emp)
         {
 
-           
-                var empList = _employeeRepo.Get();
+                var empList = _prof.Get();
 
-                var qqWhere = empList.Where(x =>
-                    x.CandidateName == emp.CandidateName && x.CandidateSurname == emp.CandidateSurname &&
-                    x.CandidateDOB.Date.Equals(emp.CandidateDOB.Date));
+                var isCandidateExist = empList.Where(x =>
+                    x.CandidateName.Trim() == emp.CandidateName.Trim() && x.CandidateSurname.Trim() == emp.CandidateSurname.Trim() &&
+                    x.MobileNumber.Trim() == emp.MobileNumber.Trim());
 
-                if (qqWhere.Count() == 0)
+            if (isCandidateExist.Any())
+            {
+                ModelState.AddModelError("Region", "Region is mandatory");
+
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (!isCandidateExist.Any())
                 {
                     BlobStorageService objBlobService = new BlobStorageService(_configuration);
                     byte[] fileData = new byte[emp.File.Length];
@@ -180,18 +212,22 @@ namespace ReferralSystem.Controllers
                     var bookdata = new ProfileModel()
                     {
                         CandidateName = emp.CandidateName,
-                        CandidateDOB = emp.CandidateDOB,
+                        MobileNumber = emp.MobileNumber,
                         CandidateSurname = emp.CandidateSurname,
                         JobID = emp.JobId,
                         DateReferred = DateTime.Now.Date,
                         ReferredBy = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-                        BlobURI = abc
+                        BlobURI = abc,
+                        ProfileStatus = GetEnumDisplayName(EnumStatus.UnderReview)
 
                     };
                     _prof.InsertOne(bookdata);
                 }
 
-                return RedirectToAction("MyReferrals", new { AdditionalParam = emp.JobId });
+                return RedirectToAction("MyReferrals", new { jobId = emp.JobId });
+            }
+
+            return View(emp);
         }
 
         private void PopulateCategories()

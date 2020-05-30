@@ -15,7 +15,7 @@
     @Html.HiddenFor(x=>x.JobID)
     @(Html.Kendo().Grid<ProfileModel>
                                         ()
-                                        .Name("grid")
+                                        .Name("myReferrals")
                                         .ColumnMenu(col => col.Filterable(false))
                                         .Columns(columns =>
                                         {
@@ -29,7 +29,7 @@
                                             columns.Command(command => command.Custom("Update Status").Click("updateStatus")).Width(70);
 
                                             columns.Command(command => command.Custom("Download").Click("downloadFile")).Width(70);
-
+                                             
 
 
                                             //columns.Bound(p => p.AdditionalDetails).ClientTemplate("<a href='" + @Html.Raw(Url.Action("DownloadResume", "Home") + "?#= BlobURI #'") + ">Download</a>");
@@ -40,6 +40,7 @@
                                         .Editable(editable => editable.Mode(GridEditMode.InLine))
                                         .Pageable()
                                         .Sortable()
+                                        .ToolBar(t => t.Search())
                                         .Navigatable()
                                         .Resizable(r => r.Columns(true))
                                         .Reorderable(r => r.Columns(true))
@@ -87,12 +88,22 @@
           .Visible(false)
           .Modal(true)
           .Draggable(true)
-          .Width(600)
-          .Height(500)
+          .Width(500)
+          .Height(300)
           )
 </div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
+//    $( document ).ready(function() {
+//        var grid = $("#myReferrals").data("kendoGrid");                   
+
+                 
+////By Index   
+//        grid.thead.find("[data-index=1]>.k-header-column-menu").remove();
+//    });
+    
+
+
     function error_handler(e) {
         if (e.errors) {
             var message = "Errors:\n";
@@ -105,32 +116,32 @@
             });
             alert(message);
         }
-        }
+    }
 
-        function updateStatus(e) {
-            debugger;
-            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    function updateStatus(e) {
+        debugger;
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
 
-            var wnd = $("#statusUpdate").data("kendoWindow");
+        var wnd = $("#statusUpdate").data("kendoWindow");
 
-            $('#wndContent1').load('/Employee/UpdateReferralStatus/', { id: dataItem.Id, status: dataItem.ProfileStatus }, function (response, status, xhr) {
+        $('#wndContent1').load('/Employee/UpdateReferralStatus/', { id: dataItem.Id, status: dataItem.ProfileStatus, name: dataItem.CandidateName }, function (response, status, xhr) {
 
             wnd.open().center();
         });
-       // wnd.content(detailsTemplate(dataItem));
+        // wnd.content(detailsTemplate(dataItem));
         wnd.center().open();
     }
 
-        function showDetails() {
+    function showDetails() {
 
         var wnd = $("#Details").data("kendoWindow");
 
         $('#wndContent').load('/Employee/ReferCandidate/', { id: '@Model.JobID'}, function (response, status, xhr) {
 
             wnd.open().center();
-            });
-         wnd.content(detailsTemplate(dataItem));
-         wnd.center().open();
+        });
+        // wnd.content(detailsTemplate(dataItem));
+        wnd.center().open();
     }
 
     function downloadFile(e) {
@@ -147,7 +158,7 @@
     function returnFalse() {
         return false;
     }
-    </script>
+</script>
 
 
     <style>
