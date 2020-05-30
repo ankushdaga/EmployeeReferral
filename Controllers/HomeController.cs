@@ -131,7 +131,7 @@ namespace ReferralSystem.Controllers
             Uri myUri = new Uri(blobUri, UriKind.Absolute);
 
         string accessKey =
-                "DefaultEndpointsProtocol=https;AccountName=referraldocuments;AccountKey=ID4sHh6dof/G8x/Qq83WkvhG4H1hYOi9pI1vxpYasXNtXVERREEv2jcZBWOp0dXmv85wEB9lb6gS2hJrCwylqA==;EndpointSuffix=core.windows.net";
+                "";
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(accessKey);
             CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("uploads");

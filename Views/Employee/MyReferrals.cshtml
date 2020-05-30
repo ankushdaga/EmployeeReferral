@@ -6,9 +6,9 @@
 @using Kendo.Mvc.UI
 @model ProfileModel
 
-<div class="form-horizontal">
+
     <div class="form-group">
-        <button type="submit" onclick="return showDetails();" class="btn btn-success float-right">Refer</button>
+        <button type="submit" onclick="return showDetails();" class="btn btn-success float-right">Refer Candidate</button>
     </div>
     <br/>
     <br/>
@@ -21,22 +21,25 @@
                                         {
                                             columns.Bound(p => p.Id).Hidden(true);
 
-                                            columns.Bound(p => p.JobID).Title("JobId").Width(100);
+                                            columns.Bound(p => p.JobID).Title("JobId").Width(50);
                                             columns.Bound(p => p.BlobURI).Hidden(true);
                                             columns.Bound(p => p.CandidateName).Title("Name").Width(100);
                                             columns.Bound(p => p.ProfileStatus).Title("Status").Width(70);
                                             //columns.Command(command => command.Edit()).Width(150);
-                                            columns.Command(command => command.Custom("Update Status").Click("updateStatus")).Width(70);
+                                           
+                                            columns.Command(command =>
+                                            {
+                                                command.Custom("Update Status").Click("updateStatus");
 
-                                            columns.Command(command => command.Custom("Download").Click("downloadFile")).Width(70);
-                                             
+                                                command.Custom("Download").Click("downloadFile");
+                                            }).Width(80);
 
 
                                             //columns.Bound(p => p.AdditionalDetails).ClientTemplate("<a href='" + @Html.Raw(Url.Action("DownloadResume", "Home") + "?#= BlobURI #'") + ">Download</a>");
                                         })
 
 
-                                        .Height(500).Width(1200)
+                                        .Height(500).Width(1120)
                                         .Editable(editable => editable.Mode(GridEditMode.InLine))
                                         .Pageable()
                                         .Sortable()
@@ -91,7 +94,7 @@
           .Width(500)
           .Height(300)
           )
-</div>
+
 
 <script type="text/javascript">
 //    $( document ).ready(function() {
