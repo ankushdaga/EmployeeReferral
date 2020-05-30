@@ -14,6 +14,7 @@
                             columns.Bound(p => p.Location).Width(100);
                             columns.Bound(p => p.NoOfVacancies).Width(120);
                             columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
+                            columns.Bound(p => p.Status).Width(100).Title("Active").ClientTemplate("<input type='checkbox' style='height:15px; width:15px;'/>");
 
                             columns.Command(command => { command.Edit(); }).Width(100);
                             columns.Command(command => command.Custom("Referrals").Click("showAllReferrals")).Width(180);
