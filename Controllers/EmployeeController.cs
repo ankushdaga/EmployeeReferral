@@ -70,6 +70,12 @@ namespace ReferralSystem.Controllers
 
             var empList = _prof.Get().Where(x=>x.JobID == AdditionalParam);
 
+            if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value != "ankush.daga@capita.co.uk")
+            {
+                empList =  empList.Where(x => x.ReferredBy == User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value);
+ 
+            }
+
             //var abc  = ObjectId.Parse()
 
             foreach (var qq in empList)
@@ -81,7 +87,8 @@ namespace ReferralSystem.Controllers
                     DateReferred = qq.DateReferred,
                     ProfileStatus = qq.ProfileStatus,
                     JobID = qq.JobID,
-                    Id = qq.Id
+                    Id = qq.Id,                   
+                    ReferredBy = qq.ReferredBy.Substring(0, qq.ReferredBy.IndexOf('@')).Replace('.', ' '),
                 });
             }
 
@@ -144,16 +151,16 @@ namespace ReferralSystem.Controllers
                 var from = new EmailAddress("ankush.daga@capita.co.uk", "Capita");
                 var to = new EmailAddress(entity.ReferredBy, "");
 
-                //List<EmailAddress> tos = new List<EmailAddress>
-                //{
-                //    new EmailAddress("pankaj.pawar@capita.co.uk", "Example User 2")
-                //};
+                List<EmailAddress> tos = new List<EmailAddress>
+                {
+                    new EmailAddress("pankaj.pawar@capita.co.uk", "Example User 2")
+                };
 
-                //var subject = "Referral Status has been changed for " + entity.CandidateName + " "+ entity.CandidateSurname;
-                //var htmlContent = "Referral status has been changed  from <strong>" + previousStatus + "</strong> to <strong> " + ProfileStatus + "</strong>";
-                //var displayRecipients = false; // set this to true if you want recipients to see each others mail id 
-                //var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
-                //var response = await client.SendEmailAsync(msg);
+                var subject = "Referral Status has been changed for " + entity.CandidateName + " " + entity.CandidateSurname;
+                var htmlContent = "Referral status has been changed  from <strong>" + previousStatus + "</strong> to <strong> " + ProfileStatus + "</strong>";
+                var displayRecipients = false; // set this to true if you want recipients to see each others mail id 
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
+                var response = await client.SendEmailAsync(msg);
             }
 
 

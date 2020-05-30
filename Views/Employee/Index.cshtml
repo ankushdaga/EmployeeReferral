@@ -8,55 +8,57 @@
 @using Kendo.Mvc
 @using Kendo.Mvc.UI
 
-@(Html.Kendo().Grid<Employee>
-                        ()
-                        .Name("gridEmployee")
-                        .ColumnMenu(col => col.Filterable(false))
-                        .Columns(columns =>
-                        {
-                            columns.Bound(p => p.JobId).Title("JobId").Width(100);
-                            columns.Bound(p => p.BusinessUnit).Title("BU").Width(100);
-                            columns.Bound(p => p.Position).Width(100);
-                            columns.Bound(p => p.Experience).Width(100);
-                            columns.Bound(p => p.Location).Width(100);
-                            columns.Bound(p => p.NoOfVacancies).Width(100);
-                            // columns.Bound(p => p.ClosingDate).Width(100);
+<h3>Open Positions</h3>
 
-                            columns.Command(command => command.Custom("Refer").Click("showDetails")).Width(180);
-                        })
-                        .Height(500).Width(1200)
-                        .ToolBar(t => t.Search())
-                        .Editable(editable => editable.Mode(GridEditMode.PopUp))
-                        .Pageable()
-                        .Sortable()
-                        .Navigatable()
-                        .Resizable(r => r.Columns(true))
-                        .Reorderable(r => r.Columns(true))
-                        .Groupable(g => g.ShowFooter(false))
-                        .Filterable()
-                        .Scrollable()
-                        .DataSource(dataSource => dataSource
-                        .Ajax()
-                        .Batch(true)
-                        .PageSize(20)
-                        .AutoSync(true)
-                        .ServerOperation(false)
-                        .Events(events => events.Error("error_handler"))
-                            .Read("GetAllPositions", "Employee")))
+@(Html.Kendo().Grid<Employee>
+                                ()
+                                .Name("gridEmployee")
+                                .ColumnMenu(col => col.Filterable(false))
+                                .Columns(columns =>
+                                {
+                                    columns.Bound(p => p.JobId).Title("Job Id").Width(100);
+                                    columns.Bound(p => p.BusinessUnit).Title("BU").Width(100);
+                        //columns.Bound(p => p.Position).Width(100);
+                        columns.Bound(p => p.Experience).Width(100);
+                                    columns.Bound(p => p.Location).Width(100);
+                                    columns.Bound(p => p.NoOfVacancies).Width(100);
+                        // columns.Bound(p => p.ClosingDate).Width(100);
+
+                        columns.Command(command => command.Custom("Refer").Click("showDetails")).Width(180);
+                                })
+                                .Height(500).Width(1200)
+                                .ToolBar(t => t.Search())
+                                .Editable(editable => editable.Mode(GridEditMode.PopUp))
+                                .Pageable()
+                                .Sortable()
+                                .Navigatable()
+                                .Resizable(r => r.Columns(true))
+                                .Reorderable(r => r.Columns(true))
+                                .Groupable(g => g.ShowFooter(false))
+                                .Filterable()
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .Batch(true)
+                                .PageSize(20)
+                                .AutoSync(true)
+                                .ServerOperation(false)
+                                .Events(events => events.Error("error_handler"))
+                                    .Read("GetAllPositions", "Employee")))
 
 
 @*@(Html.Kendo().Window().Name("Details")
-      .Title("Refer Candidate").Content(@<text>
-                                             <div id="wndContent">
+    .Title("Refer Candidate").Content(@<text>
+                                           <div id="wndContent">
 
-                                             </div>
-                                          </text>)
-      .Visible(false)
-      .Modal(true)
-      .Draggable(true)
-      .Width(600)
-      .Height(500)
-      )*@
+                                           </div>
+                                        </text>)
+    .Visible(false)
+    .Modal(true)
+    .Draggable(true)
+    .Width(600)
+    .Height(500)
+    )*@
 
 <script type="text/javascript">
     function error_handler(e) {
@@ -77,7 +79,7 @@
 
 
     function showDetails(e) {
-     
+
         var pwrid = $(this)[0].JobId;
 
         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
@@ -89,7 +91,7 @@
         window.location = '@Url.Action("MyReferrals", "Employee", new { jobId = "ID"  })'.replace("ID", dataItem.JobId);
 
         //$('#wndContent').load('/Employee/ReferCandidate/', { id: dataItem.JobId, bu: dataItem.BusinessUnit}, function (response, status, xhr) {
-            
+
         //    wnd.open().center();
         //    });
         //wnd.content(detailsTemplate(dataItem));

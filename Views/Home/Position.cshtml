@@ -2,42 +2,44 @@
 @using Kendo.Mvc.UI
 @using ReferralSystem.Models
 
-@(Html.Kendo().Grid<Position>
-                        ()
-                        .Name("gridPositions")
-                        .ColumnMenu(col => col.Filterable(false))
-                        .Columns(columns =>
-                        {
-                            columns.Bound(p => p.JobId).Width(100);
-                            columns.Bound(p => p.Role).Width(100);
-                            columns.Bound(p => p.Experience).Width(100);
-                            columns.Bound(p => p.Location).Width(100);
-                            columns.Bound(p => p.NoOfVacancies).Width(120);
-                            columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
-                            columns.Bound(p => p.Status).Width(100).Title("Active").ClientTemplate("<input type='checkbox' style='height:15px; width:15px;'/>");
+<h3>Open Positions</h3>
 
-                            columns.Command(command => { command.Edit(); }).Width(100);
-                            columns.Command(command => command.Custom("Referrals").Click("showAllReferrals")).Width(180);
-                        })
-                        .Height(500)
-                        .Editable(editable => editable.Mode(GridEditMode.InLine))
-                        .Pageable()
-                        .Sortable()
-                        .Navigatable()
-                         .ToolBar(t => t.Search())
-                        .Resizable(r => r.Columns(true))
-                        .Reorderable(r => r.Columns(true))
-                        .Groupable(g => g.ShowFooter(false))
-                        .Filterable()
-                        .Scrollable()
-                        .DataSource(dataSource => dataSource
-                        .Ajax()
-                        .Batch(true)
-                        .PageSize(20)
-                        .AutoSync(true)
-                        .ServerOperation(false)
-                        .Events(events => events.Error("error_handler"))
-                            .Read("Positions_Read", "Home")))
+@(Html.Kendo().Grid<Position>
+                            ()
+                            .Name("gridPositions")
+                            .ColumnMenu(col => col.Filterable(false))
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.JobId).Width(100);
+                                columns.Bound(p => p.Role).Width(100);
+                                columns.Bound(p => p.Experience).Width(100);
+                                columns.Bound(p => p.Location).Width(100);
+                                columns.Bound(p => p.NoOfVacancies).Width(120);
+                                columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
+                                columns.Bound(p => p.Status).Width(100).Title("Active").ClientTemplate("<input type='checkbox' checked style='height:15px; width:15px;'/>");
+
+                                columns.Command(command => { command.Edit(); }).Width(100);
+                                columns.Command(command => command.Custom("View Profiles").Click("showAllReferrals")).Width(180);
+                            })
+                            .Height(500)
+                            .Editable(editable => editable.Mode(GridEditMode.InLine))
+                            .Pageable()
+                            .Sortable()
+                            .Navigatable()
+                             .ToolBar(t => t.Search())
+                            .Resizable(r => r.Columns(true))
+                            .Reorderable(r => r.Columns(true))
+                            .Groupable(g => g.ShowFooter(false))
+                            .Filterable()
+                            .Scrollable()
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .Batch(true)
+                            .PageSize(20)
+                            .AutoSync(true)
+                            .ServerOperation(false)
+                            .Events(events => events.Error("error_handler"))
+                                .Read("Positions_Read", "Home")))
 
 <script type="text/javascript">
     function error_handler(e) {

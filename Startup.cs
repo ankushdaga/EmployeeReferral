@@ -23,7 +23,7 @@ using ReferralSystem.Extensions;
 
 namespace ReferralSystem
 {
-    public class Startup
+    public class Startup : ControllerBase
     {
         public Startup(IConfiguration configuration)
         {
@@ -103,7 +103,7 @@ namespace ReferralSystem
               {
                   OnAuthorizationCodeReceived = (context) =>
                   {
-
+                     
                       return Task.CompletedTask;
                   },
                   

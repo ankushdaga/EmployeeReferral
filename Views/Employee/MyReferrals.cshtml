@@ -2,109 +2,127 @@
 @{
     ViewData["Title"] = "MyReferrals";
 }
+@using System.Security.Claims
 @using Kendo.Mvc
 @using Kendo.Mvc.UI
 @model ProfileModel
 
 
-    <div class="form-group">
-        <button type="submit" onclick="return showDetails();" class="btn btn-success float-right">Refer Candidate</button>
-    </div>
-    <br/>
-    <br/>
-    @Html.HiddenFor(x=>x.JobID)
+@if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value != "ankush.daga@capita.co.uk")
+{
+    
+    <h3>My Referrals</h3>
+
+<div class="form-group">
+    <button type="submit" onclick="return showDetails();" class="btn btn-success float-right">Refer Candidate</button>
+</div>
+}
+else
+{
+    <h3>Referrals Received</h3>
+}
+
+    <br />
+    <br />
+    @Html.HiddenFor(x => x.JobID)
     @(Html.Kendo().Grid<ProfileModel>
-                                        ()
-                                        .Name("myReferrals")
-                                        .ColumnMenu(col => col.Filterable(false))
-                                        .Columns(columns =>
-                                        {
-                                            columns.Bound(p => p.Id).Hidden(true);
+                                                ()
+                                                .Name("myReferrals")
+                                                .ColumnMenu(col => col.Filterable(false))
+                                                .Columns(columns =>
+                                                {
+                                                    columns.Bound(p => p.Id).Hidden(true);
 
-                                            columns.Bound(p => p.JobID).Title("JobId").Width(50);
-                                            columns.Bound(p => p.BlobURI).Hidden(true);
-                                            columns.Bound(p => p.CandidateName).Title("Name").Width(100);
-                                            columns.Bound(p => p.ProfileStatus).Title("Status").Width(70);
-                                            //columns.Command(command => command.Edit()).Width(150);
-                                           
-                                            columns.Command(command =>
-                                            {
-                                                command.Custom("Update Status").Click("updateStatus");
+                                                    columns.Bound(p => p.JobID).Title("JobId").Width(50);
+                                                    columns.Bound(p => p.BlobURI).Hidden(true);
+                                                    columns.Bound(p => p.CandidateName).Title("Candidate Name").Width(70);
+                                                    columns.Bound(p => p.ReferredBy).Title("Referred By").Width(70);
 
-                                                command.Custom("Download").Click("downloadFile");
-                                            }).Width(80);
+                                                    columns.Bound(p => p.ProfileStatus).Title("Status").Width(70);
+                                                    //columns.Command(command => command.Edit()).Width(150);
 
-
-                                            //columns.Bound(p => p.AdditionalDetails).ClientTemplate("<a href='" + @Html.Raw(Url.Action("DownloadResume", "Home") + "?#= BlobURI #'") + ">Download</a>");
-                                        })
+                                                    columns.Command(command =>
+                                                    {
+                                                        if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value == "ankush.daga@capita.co.uk")
+                                                        {
+                                                            command.Custom("Update Status").Click("updateStatus");
+                                                        }
 
 
-                                        .Height(500).Width(1120)
-                                        .Editable(editable => editable.Mode(GridEditMode.InLine))
-                                        .Pageable()
-                                        .Sortable()
-                                        .ToolBar(t => t.Search())
-                                        .Navigatable()
-                                        .Resizable(r => r.Columns(true))
-                                        .Reorderable(r => r.Columns(true))
-                                        .Groupable(g => g.ShowFooter(false))
-                                        .Filterable()
-                                        .Scrollable()
-                                        .DataSource(dataSource => dataSource
-                                        .Ajax()
-                                        .Batch(true)
-                                            .Model(model =>
-                                            {
-                                                model.Field(p => p.JobID).Editable(false);
-                                                model.Field(p => p.CandidateName).Editable(false);
+                                                        command.Custom("Download").Click("downloadFile");
+                                                    }).Width(80);
 
-                                                model.Field(p => p.CandidateName).DefaultValue(
-                                                    ViewData["defaultCategory"] as ReferralSystem.Models.Status);
-                                            })
-                                        .PageSize(20)
-                                        .AutoSync(true)
-                                        .ServerOperation(false)
-                                        .Events(events => events.Error("error_handler"))
-                                            .Read("GetAllReferrals", "Employee", new { AdditionalParam = Model.JobID })))
+
+                                                    //columns.Bound(p => p.AdditionalDetails).ClientTemplate("<a href='" + @Html.Raw(Url.Action("DownloadResume", "Home") + "?#= BlobURI #'") + ">Download</a>");
+                                                })
+
+
+                                                .Height(500).Width(1120)
+                                                .Editable(editable => editable.Mode(GridEditMode.InLine))
+                                                .Pageable()
+                                                .Sortable()
+                                                .ToolBar(t => t.Search())
+                                                .Navigatable()
+                                                .Resizable(r => r.Columns(true))
+                                                .Reorderable(r => r.Columns(true))
+                                                .Groupable(g => g.ShowFooter(false))
+                                                .Filterable()
+                                                .Scrollable()
+                                                .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .Batch(true)
+                                                    .Model(model =>
+                                                    {
+                                                        model.Field(p => p.JobID).Editable(false);
+                                                        model.Field(p => p.CandidateName).Editable(false);
+
+                                                        model.Field(p => p.CandidateName).DefaultValue(
+                                                            ViewData["defaultCategory"] as ReferralSystem.Models.Status);
+                                                    })
+                                                .PageSize(20)
+                                                .AutoSync(true)
+                                                .ServerOperation(false)
+                                                .Events(events => events.Error("error_handler"))
+                                                    .Read("GetAllReferrals", "Employee", new { AdditionalParam = Model.JobID })))
 
 
 
     @(Html.Kendo().Window().Name("Details")
-                  .Title("Refer Candidate").Content(@<text>
-                    <div id="wndContent">
+                          .Title("Refer Candidate").Content(@<text>
+                            <div id="wndContent">
+
+                            </div>
+                        </text>)
+                                                      .Visible(false)
+                                                      .Modal(true)
+                                                      .Draggable(true)
+                                                      .Width(800)
+                                                      .Height(500)
+    )
+
+    @(Html.Kendo().Window().Name("statusUpdate")
+                  .Title("Update Status").Content(@<text>
+                    <div id="wndContent1">
 
                     </div>
                 </text>)
-                              .Visible(false)
-                              .Modal(true)
-                              .Draggable(true)
-                              .Width(600)
-                              .Height(500)
-          )
-    
-    @(Html.Kendo().Window().Name("statusUpdate")
-          .Title("Update Status").Content(@<text>
-                                                <div id="wndContent1">
-
-                                                </div>
-                                             </text>)
-          .Visible(false)
-          .Modal(true)
-          .Draggable(true)
-          .Width(500)
-          .Height(300)
-          )
+                          .Visible(false)
+                          .Modal(true)
+                          .Draggable(true)
+                          .Width(500)
+                          .Height(300)
+    )
 
 
 <script type="text/javascript">
-//    $( document ).ready(function() {
-//        var grid = $("#myReferrals").data("kendoGrid");                   
+    //    $( document ).ready(function() {
+//        var grid = $("#myReferrals").data("kendoGrid");
 
-                 
-////By Index   
+
+////By Index
 //        grid.thead.find("[data-index=1]>.k-header-column-menu").remove();
 //    });
-    
+
 
 
     function error_handler(e) {
@@ -164,55 +182,62 @@
 </script>
 
 
-    <style>
-        .k-grid tr .checkbox-align {
-            text-align: center;
-            vertical-align: middle;
-        }
+<style>
 
-        .product-photo {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-size: 32px 35px;
-            background-position: center center;
-            vertical-align: middle;
-            line-height: 32px;
-            box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
-            margin-right: 5px;
-        }
 
-        .product-name {
-            display: inline-block;
-            vertical-align: middle;
-            line-height: 32px;
-            padding-left: 3px;
-        }
+     .k-grid tr .checkbox-align {
+         text-align: center;
+         vertical-align: middle;
+     }
 
-        .k-rating-container .k-rating-item {
-            padding: 4px 0;
-        }
+     .k-grid tbody .k-button {
+         min-width: 0px;
+     }
+  
 
-            .k-rating-container .k-rating-item .k-icon {
-                font-size: 16px;
-            }
+    .product-photo {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-size: 32px 35px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 32px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-right: 5px;
+    }
 
-        .dropdown-country-wrap {
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            white-space: nowrap;
-        }
+    .product-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        padding-left: 3px;
+    }
 
-            .dropdown-country-wrap img {
-                margin-right: 10px;
-            }
+    .k-rating-container .k-rating-item {
+        padding: 4px 0;
+    }
 
-        #grid .k-grid-edit-row > td > .k-rating {
-            margin-left: 0;
-            width: 100%;
-        }
-    </style>
+    .k-rating-container .k-rating-item .k-icon {
+        font-size: 16px;
+    }
+
+    .dropdown-country-wrap {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    .dropdown-country-wrap img {
+        margin-right: 10px;
+    }
+
+    #grid .k-grid-edit-row > td > .k-rating {
+        margin-left: 0;
+        width: 100%;
+    }
+</style>
 
 

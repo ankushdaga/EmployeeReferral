@@ -2,102 +2,114 @@
 @using Kendo.Mvc.UI
 @using ReferralSystem.Models
 
-@{
-    ViewData["Title"] = "Demands";
-}
 
-<h1>Demands</h1>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+
+<h3>Demands</h3>
 
 @(Html.Kendo().Grid<Demand>
-                                            ()
-                                            .Name("gridDemands")
-                                            .ColumnMenu(col => col.Filterable(false))
-                                            .Columns(columns =>
-                                            {
-                                                columns.Bound(p => p.Id).Visible(false);
-                                                columns.Bound(p => p.BusinessUnit).Width(100);
-                                                columns.Bound(p => p.Role).Width(100);
-                                                columns.Bound(p => p.Experience).Width(100);
-                                                columns.Bound(p => p.Location).Width(100);
-                                                columns.Bound(p => p.NoOfVacancies).Width(120);
-                                                columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
-                                                columns.Command(command =>
+                                                ()
+                                                .Name("gridDemands")
+                                                .ColumnMenu(col => col.Filterable(false))
+                                                .Columns(columns =>
                                                 {
-                                                    command.Custom("Create Position").Click("CreatePosition");
-                                                    command.Custom("View Demand").Click("ViewDemand");
-                                                }).Width(120);
-                                            })
-                                            .Height(500)
-                                            .Editable(editable => editable.Mode(GridEditMode.PopUp))
-                                            .ToolBar(t => t.Search())
-                                            .Pageable()
-                                            .Sortable()
-                                            .Navigatable()
-                                            .Resizable(r => r.Columns(true))
-                                            .Reorderable(r => r.Columns(true))
-                                            .Groupable(g => g.ShowFooter(false))
-                                            .Filterable()
-                                            .Scrollable()
-                                            .DataSource(dataSource => dataSource
-                                            .Ajax()
-                                            .Batch(true)
-                                            .PageSize(20)
-                                            .AutoSync(true)
-                                            .ServerOperation(false)
-                                            .Events(events => events.Error("error_handler"))
-                                                .Read("Demands_Read", "Home")))
+                                                    columns.Bound(p => p.Id).Visible(false);
+                                                    columns.Bound(p => p.BusinessUnit).Width(100);
+                                                    columns.Bound(p => p.Role).Width(100);
+                                                    columns.Bound(p => p.Experience).Width(100);
+                                                    columns.Bound(p => p.Location).Width(100);
+                                                    columns.Bound(p => p.NoOfVacancies).Width(120);
+                                                    columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
+                                                    columns.Command(command =>
+                                                    {
+                                                        command.Custom("Create Position").Click("CreatePosition").Text(" ").HtmlAttributes(new { @class = "create", @title = "Create Position" });
+                                                        command.Custom("View Demand").Click("ViewDemand").Text(" ").HtmlAttributes(new { @class = "view", @title = "View Demand" });
+
+                                                    }).Width(120);
+                                                })
+                                                .Height(500)
+                                                .Editable(editable => editable.Mode(GridEditMode.PopUp))
+                                                .ToolBar(t => t.Search())
+                                                .Pageable()
+                                              .Excel(excel => excel
+                                                  .FileName("Referral Export.xlsx")
+                                                  .Filterable(true)
+                                                  .ProxyURL(Url.Action("Excel_Export_Save", "Home"))
+                                              )
+                                                .Sortable()
+                                                .Navigatable()
+                                                .Resizable(r => r.Columns(true))
+                                                .Reorderable(r => r.Columns(true))
+                                                .Groupable(g => g.ShowFooter(false))
+                                                .Filterable()
+                                                .Scrollable()
+                                                .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .Batch(true)
+                                                .PageSize(20)
+                                                .AutoSync(true)
+                                                .ServerOperation(false)
+                                                .Events(events => events.Error("error_handler"))
+                                                    .Read("Demands_Read", "Home")))
 
 @(Html.Kendo().Window().Name("Details")
-                    .Title("Demand Details")
-                    .Visible(false)
-                    .Modal(true)
-                    .Draggable(true)
-                    .Width(300)
+                        .Title("Demand Details")
+                        .Visible(false)
+                        .Modal(true)
+                        .Draggable(true)
+                        .Width(600)
 )
 
 <script type="text/x-kendo-template" id="template">
     <div id="details-container">
-        <dl>
-            <dt>
-                Demand Id: #= DemandId #
-            </dt>
-            <dt>
-                Business Unit: #= BusinessUnit #
-            </dt>
-            <dt>
-                Project Name: #= ProjectName #
-            </dt>
-            <dt>
-                Role: #= Role #
-            </dt>
-            <dt>
-                Band: #= Band #
-            </dt>
-            <dt>
-                Experience: #= Experience #
-            </dt>
-            <dt>
-                Location: #= Location #
-            </dt>
-            <dt>
-                No Of Vacancies: #= NoOfVacancies #
-            </dt>
-            <dt>
-                Demand Date: #= DemandDate #
-            </dt>
-            <dt>
-                ClosingDate: #= ClosingDate #
-            </dt>
-            <dt>
-                Status: #= Status #
-            </dt>
-            <dt>
-                Job Description: #= JobDescription #
-            </dt>
-            <dt>
-                Skills: #= Skills #
-            </dt>
-        </dl>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold"> Demand Id: </label> #=  DemandId #
+            </div>
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold"> Location: </label> #= Location #
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold"> Business Unit: </label> #= BusinessUnit #
+            </div>
+            <div class="col-md-4">
+                <label class="control-label" style="font-weight:bold"> No Of Vacancies: </label> #= NoOfVacancies #
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold"> Project Name: </label> #= ProjectName #
+            </div>
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold"> Role: </label> #= Role #
+            </div>
+        </div>
+
+        
+
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold"> Band: </label> #= Band #
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" style="font-weight:bold"> Experience: </label> #= Experience #
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold"> Job Description: </label> #= JobDescription #
+            </div>
+           
+            <div class="col-md-6">
+                <label class="control-label" style="font-weight:bold">Skills: </label> #= Skills #
+            </div>
+
+        </div>
     </div>
 </script>
 
@@ -165,6 +177,20 @@
 
 
 <style>
+    .create {
+        background-image: url('../images/create.png');
+        background-size: cover;
+        height: 31px;
+        width: 31px;
+    }
+
+    .view {
+        background-image: url('../images/view.png');
+        background-size: cover;
+        height: 31px;
+        width: 31px;
+    }
+
     .k-grid tr .checkbox-align {
         text-align: center;
         vertical-align: middle;

@@ -5,102 +5,128 @@
     ViewData["Title"] = "Create Position";
 }
 
-<h1>CreatePosition</h1>
+<h3>Create Position</h3>
 
 <hr />
 <script>
     $(document).ready(function () {
         var required = $("#DemandID").data("kendoMultiSelect");
 
+
+
+
+
         $("#get").click(function () {
             alert(required.value());
         });
     });
 </script>
-<div class="row">
-    <div class="col-md-4">
-        <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="SavePosition">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="DemandId" class="control-label"></label>
-                @(Html.Kendo().MultiSelectFor(model => model.DemandId)
-                      .DataTextField("DemandId") 
-                      .DataValueField("DemandId")
-                      .DataSource(source =>
-                      {
-                          source.Read(read =>
-                          {
-                              read.Action("DemandIds_Read", "Home");
-                          })
-                          .ServerFiltering(true);
-                      })
-                      .Value(Model.DemandId)
-                )
-            </div>
-            <div class="form-group">
-                <label asp-for="BusinessUnit" class="control-label"></label>
-                <input asp-for="BusinessUnit" class="form-control" />
-                <span asp-validation-for="BusinessUnit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectName" class="control-label"></label>
-                <input asp-for="ProjectName" class="form-control" />
-                <span asp-validation-for="ProjectName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Band" class="control-label"></label>
-                <input asp-for="Band" class="form-control" />
-                <span asp-validation-for="Band" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Experience" class="control-label"></label>
-                <input asp-for="Experience" class="form-control" />
-                <span asp-validation-for="Experience" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NoOfVacancies" class="control-label"></label>
-                <input asp-for="NoOfVacancies" class="form-control" />
-                <span asp-validation-for="NoOfVacancies" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClosingDate" class="control-label"></label>
-                <input asp-for="ClosingDate" class="form-control" />
-                <span asp-validation-for="ClosingDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JobDescription" class="control-label"></label>
-                <textarea draggable="false" asp-for="JobDescription" class="form-control"> </textarea>
-                <span asp-validation-for="JobDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Skills" class="control-label"></label>
-                <textarea draggable="false" asp-for="Skills" class="form-control"> </textarea>
-                <span asp-validation-for="Skills" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input id="get" type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="SavePosition">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="DemandId" class="control-label"></label>
+            @(Html.Kendo().MultiSelectFor(model => model.DemandId)
+                                  .DataTextField("DemandId")
+                                  .DataValueField("DemandId")
+                                  .DataSource(source =>
+                                  {
+                                      source.Read(read =>
+                                      {
+                                          read.Action("DemandIds_Read", "Home");
+                                      })
+                                          .ServerFiltering(true);
+                                  })
+                                  .Value(Model.DemandId)
+            )
+        </div>
+        <div class="col-md-6">
+            <label asp-for="JobDescription" class="control-label"></label>
+            <textarea draggable="false" asp-for="JobDescription" class="form-control"> </textarea>
+            <span asp-validation-for="JobDescription" class="text-danger"></span>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Demand">Back to List</a>
-</div>
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="BusinessUnit" class="control-label"></label>
+            <input asp-for="BusinessUnit" class="form-control" />
+            <span asp-validation-for="BusinessUnit" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Skills" class="control-label"></label>
+            <textarea draggable="false" asp-for="Skills" class="form-control"> </textarea>
+            <span asp-validation-for="Skills" class="text-danger"></span>
+        </div>
+      
+    </div>
 
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="Role" class="control-label"></label>
+            <input asp-for="Role" class="form-control" />
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Band" class="control-label"></label>
+            <input asp-for="Band" class="form-control" />
+            <span asp-validation-for="Band" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="Experience" class="control-label"></label>
+            <input asp-for="Experience" class="form-control" />
+            <span asp-validation-for="Experience" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Location" class="control-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="NoOfVacancies" class="control-label"></label>
+            <input asp-for="NoOfVacancies" class="form-control" />
+            <span asp-validation-for="NoOfVacancies" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="ClosingDate" class="control-label"></label>
+            @(Html.Kendo().DatePickerFor(x=>x.ClosingDate)
+                  
+                  .Value("30/05/2020")
+                  .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
+                  )
+            <span asp-validation-for="ClosingDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+       
+        <div class="col-md-6">
+            <label asp-for="ProjectName" class="control-label"></label>
+            <input asp-for="ProjectName" class="form-control" />
+            <span asp-validation-for="ProjectName" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-2">
+            <label asp-for="Status" class="control-label">Active</label>
+            <input type="checkbox" checked asp-for="Status" style="height:20px;width:20px;" class="form-control" />
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <input id="get" type="submit" value="Create" class="btn btn-primary float-lg-right" />
+    </div>
+</form>
+
+
+<div >
+    <a asp-action="Demand" class="float-lg-right" style="margin-right: 10px">Back to List</a>
+</div>

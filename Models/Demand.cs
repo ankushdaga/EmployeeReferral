@@ -21,8 +21,15 @@ namespace ReferralSystem.Models
        public string Location { get; set; }
        public string NoOfVacancies { get; set; }
        public string RequesterEmailID { get; set; }
-       public DateTime DemandDate { get; set; }
-       public DateTime ClosingDate { get; set; }
+
+        private DateTime _DateTime { get; set; }
+
+        public DateTime DemandDate
+        {
+            get { return _DateTime.Date; } set { this._DateTime = value.Date; }
+        }
+
+        public DateTime ClosingDate { get; set; }
        public string Status { get; set; }
        public string JobDescription { get; set; }
        public string Skills { get; set; }
