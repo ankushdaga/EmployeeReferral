@@ -85,7 +85,7 @@ namespace ReferralSystem.Controllers
                     BlobURI = qq.BlobURI,
                     CandidateName = qq.CandidateName + " " + qq.CandidateSurname,
                     DateReferred = qq.DateReferred,
-                    ProfileStatus = qq.ProfileStatus,
+                    ProfileStatus = Enum.GetName(typeof(EnumStatus),Convert.ToInt32(qq.ProfileStatus)),
                     JobID = qq.JobID,
                     Id = qq.Id,                   
                     ReferredBy = qq.ReferredBy.Substring(0, qq.ReferredBy.IndexOf('@')).Replace('.', ' '),
@@ -142,9 +142,12 @@ namespace ReferralSystem.Controllers
 
             if (entity != null && entity.ProfileStatus != ProfileStatus)
             {
+                int aa;
+              
                 entity.ProfileStatus = ProfileStatus;
                 _prof.ReplaceOne(entity);
 
+           
 
                 var apiKey = _configuration.GetSection("SENDGRID_API_KEY").Value;
                 var client = new SendGridClient(apiKey);
@@ -225,8 +228,8 @@ namespace ReferralSystem.Controllers
                         DateReferred = DateTime.Now.Date,
                         ReferredBy = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
                         BlobURI = abc,
-                        ProfileStatus = GetEnumDisplayName(EnumStatus.UnderReview)
-
+                        ProfileStatus = EnumStatus.UnderReview.ToString()
+                        //GetEnumDisplayName(EnumStatus.UnderReview)
                     };
                     _prof.InsertOne(bookdata);
                 }
@@ -263,7 +266,8 @@ namespace ReferralSystem.Controllers
                 .Name;
         }
 
-        enum EnumStatus
+
+        public enum EnumStatus
         {
             [Display(Name = "Under Review")]
             UnderReview = 0,
@@ -273,14 +277,16 @@ namespace ReferralSystem.Controllers
             ScreenRejected = 2,
             [Display(Name = "Evaluation Rejected")]
             EvaluationRejected = 3,
+            [Display(Name = "Interviewed")]
+            Interviewed = 4,
             [Display(Name = "Selected")]
-            Selected = 4,
+            Selected = 5,
             [Display(Name = "Offered")]
-            Offered = 5,
+            Offered = 6,
             [Display(Name = "Onboarded")]
-            Onboarded = 6,
+            Onboarded = 7,
             [Display(Name = "Offer Declined")]
-            OfferDeclined = 7
+            OfferDeclined = 8
         }
     }
 }

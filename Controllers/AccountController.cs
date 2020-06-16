@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ReferralSystem.Models;
 
 namespace ReferralSystem.Controllers
 {
@@ -32,6 +33,8 @@ namespace ReferralSystem.Controllers
 
             var ss = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         }
+
+      
 
         [Authorize]
         public async Task Logout()

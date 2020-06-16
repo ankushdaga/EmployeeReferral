@@ -39,9 +39,4 @@
     </Reference>
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
 </Project>

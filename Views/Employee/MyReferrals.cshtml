@@ -36,7 +36,11 @@ else
                                                     columns.Bound(p => p.JobID).Title("JobId").Width(50);
                                                     columns.Bound(p => p.BlobURI).Hidden(true);
                                                     columns.Bound(p => p.CandidateName).Title("Candidate Name").Width(70);
-                                                    columns.Bound(p => p.ReferredBy).Title("Referred By").Width(70);
+
+                                                    if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value == "ankush.daga@capita.co.uk")
+                                                    {
+                                                        columns.Bound(p => p.ReferredBy).Title("Referred By").Width(70);
+                                                    }
 
                                                     columns.Bound(p => p.ProfileStatus).Title("Status").Width(70);
                                                     //columns.Command(command => command.Edit()).Width(150);

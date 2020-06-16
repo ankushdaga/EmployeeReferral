@@ -6,6 +6,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -31,13 +33,16 @@ namespace ReferralSystem.Controllers
         private readonly IMongoRepository<Position> _position;
 
         private readonly IMongoRepository<Demand> _demand;
+        private readonly IMongoRepository<ProfileModel> _profile;
 
 
-        public HomeController(IMongoRepository<UserModel> userrRepository, IMongoRepository<Position> positionRepo, IMongoRepository<Demand> DemandRepo)
+
+        public HomeController(IMongoRepository<UserModel> userrRepository, IMongoRepository<Position> positionRepo, IMongoRepository<Demand> DemandRepo, IMongoRepository<ProfileModel> ProfileRepo)
         {
             _user = userrRepository;
             _position = positionRepo;
             _demand = DemandRepo;
+            _profile = ProfileRepo;
         }
 
         public async  Task<IActionResult> Index()
@@ -48,6 +53,21 @@ namespace ReferralSystem.Controllers
                 //var authorization = this.Request.Headers["Authorization"].ToString();
                 //// var tokenstring = authorization.Substring("Bearer ".Length).Trim();
                 //var handler = new JwtSecurityTokenHandler();
+
+
+
+                GenericIdentity myIdentity = new GenericIdentity("MyIdentity");
+
+                // Create generic principal.
+                String[] myStringArray = { "Manager", "Teller" };
+                GenericPrincipal myPrincipal =
+                    new GenericPrincipal(myIdentity, myStringArray);
+
+                // Attach the principal to the current thread.
+                // This is not required unless repeated validation must occur,
+                // other code in your application must validate, or the
+                // PrincipalPermission object is used.
+                Thread.CurrentPrincipal = myPrincipal;
 
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 if (_user.Get().Any(x => x.EmailId.Equals(userEmail)))
@@ -76,10 +96,69 @@ namespace ReferralSystem.Controllers
             return View();
         }
 
+        public ActionResult DisplaySearchResults(string fromDate, string toDate, string band)
+        {
+            var model = new Dashboard();
+            var abc = _profile.Get().Where(x =>
+                (x.DateReferred.Date >= Convert.ToDateTime(fromDate)) &&
+                x.DateReferred.Date <= Convert.ToDateTime(toDate)).ToList();
+
+            model.a = abc.Count();
+
+            foreach (var aa in abc)
+            {
+                switch (aa.ProfileStatus)
+                {
+                    case "1":
+                         model.c = model.c + 1;
+                        break;
+                    case "4":
+                        model.d = model.d + 1;
+                        break;
+                    case "6":
+                        model.f = model.f + 1;
+                        break;
+                    case "7":
+                        model.f = model.e + 1;
+                        break;
+                    case "5":
+                        model.b = model.b + 1;
+                        break;
+                }
+
+            }
+
+            return PartialView("_DashboardDetails", model);
+        }
+
+        [HttpPost]
+        public ActionResult Excel_Export_Save(string contentType, string base64, string fileName)
+        {
+            var fileContents = Convert.FromBase64String(base64);
+
+            return File(fileContents, contentType, fileName);
+        }
+
         [HttpGet]
         public async Task<ActionResult> Privacy()
         {
              return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Dashboard()
+        {
+            return View();
+        }
+
+        public class PopulationModel
+        {
+            public string CityName { get; set; }
+            public int PopulationYear2020 { get; set; }
+            public int PopulationYear2010 { get; set; }
+            public int PopulationYear2000 { get; set; }
+            public int PopulationYear1990 { get; set; }
+
         }
 
 
@@ -89,6 +168,28 @@ namespace ReferralSystem.Controllers
 
             return View();
         }
+
+        [HttpGet]
+        public JsonResult PopulationChart()
+        {
+            var populationList = GetUsStatePopulationList();
+            return Json(populationList);
+        }
+
+    
+            public static List<PopulationModel> GetUsStatePopulationList()
+            {
+                var list = new List<PopulationModel>();
+                list.Add(new PopulationModel { CityName = "Chennai", PopulationYear2020 = 28000, PopulationYear2010 = 15000, PopulationYear2000 = 22000, PopulationYear1990 = 50000 });
+                list.Add(new PopulationModel { CityName = "Pune", PopulationYear2020 = 30000, PopulationYear2010 = 19000, PopulationYear2000 = 24000, PopulationYear1990 = 39000 });
+                list.Add(new PopulationModel { CityName = "Kochi", PopulationYear2020 = 35000, PopulationYear2010 = 16000, PopulationYear2000 = 26000, PopulationYear1990 = 41000 });
+                list.Add(new PopulationModel { CityName = "Kolkata", PopulationYear2020 = 37000, PopulationYear2010 = 14000, PopulationYear2000 = 28000, PopulationYear1990 = 48000 });
+                list.Add(new PopulationModel { CityName = "Odisha", PopulationYear2020 = 40000, PopulationYear2010 = 18000, PopulationYear2000 = 30000, PopulationYear1990 = 54000 });
+
+                return list;
+
+            }
+       
 
 
 
@@ -131,7 +232,7 @@ namespace ReferralSystem.Controllers
             Uri myUri = new Uri(blobUri, UriKind.Absolute);
 
         string accessKey =
-                "";
+                "DefaultEndpointsProtocol=https;AccountName=referraldocuments;AccountKey=ID4sHh6dof/G8x/Qq83WkvhG4H1hYOi9pI1vxpYasXNtXVERREEv2jcZBWOp0dXmv85wEB9lb6gS2hJrCwylqA==;EndpointSuffix=core.windows.net";
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(accessKey);
             CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference("uploads");

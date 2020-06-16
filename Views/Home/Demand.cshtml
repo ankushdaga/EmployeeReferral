@@ -15,17 +15,19 @@
                                                 {
                                                     columns.Bound(p => p.Id).Visible(false);
                                                     columns.Bound(p => p.BusinessUnit).Width(100);
-                                                    columns.Bound(p => p.Role).Width(100);
-                                                    columns.Bound(p => p.Experience).Width(100);
-                                                    columns.Bound(p => p.Location).Width(100);
+                                                    columns.Bound(p => p.Role).Width(80);
+                                                    columns.Bound(p => p.Experience).Width(90);
+                                                    columns.Bound(p => p.Location).Width(90);
                                                     columns.Bound(p => p.NoOfVacancies).Width(120);
-                                                    columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
+                                                    columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(120);
                                                     columns.Command(command =>
                                                     {
                                                         command.Custom("Create Position").Click("CreatePosition").Text(" ").HtmlAttributes(new { @class = "create", @title = "Create Position" });
                                                         command.Custom("View Demand").Click("ViewDemand").Text(" ").HtmlAttributes(new { @class = "view", @title = "View Demand" });
 
-                                                    }).Width(120);
+ 
+
+                                                    }).Width(60);
                                                 })
                                                 .Height(500)
                                                 .Editable(editable => editable.Mode(GridEditMode.PopUp))

@@ -86,7 +86,7 @@
         $.ajax
         ({ 
             url: "/Employee/SaveReferralStatus",
-                data: { "Id": $('#Id').val(), "ProfileStatus": data.text()},
+                data: { "Id": $('#Id').val(), "ProfileStatus": data.value()},
             type: 'post',
             success: function(result)
             {
