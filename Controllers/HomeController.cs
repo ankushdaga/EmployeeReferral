@@ -334,7 +334,10 @@ namespace ReferralSystem.Controllers
                 DemandId = demand.DemandId,
                 Skills = demand.Skills,
                 JobDescription = demand.JobDescription,
-                JobId = jobId.ToString()
+                JobId = jobId.ToString(),
+                WorkDayId = demand.WorkDayId
+
+
             };
 
             this._position.InsertOne(_position);

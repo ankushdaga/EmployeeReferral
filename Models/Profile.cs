@@ -31,9 +31,12 @@ namespace ReferralSystem.Models
        public string Screening2Status { get; set; }
        public string FinalRoundStatus { get; set; }
        // public string ProfileStatus { get; set; }
-       public string HRComment { get; set; }
+        public string HRComment { get; set; }
+        [DisplayName("Email")]
+        public string EmailId { get; set; }
 
-        
+
+
         [UIHint("AllRoles")]
         public string ProfileStatus { get; set; }
     }

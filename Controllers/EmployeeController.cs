@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
@@ -85,7 +87,7 @@ namespace ReferralSystem.Controllers
                     BlobURI = qq.BlobURI,
                     CandidateName = qq.CandidateName + " " + qq.CandidateSurname,
                     DateReferred = qq.DateReferred,
-                    ProfileStatus = Enum.GetName(typeof(EnumStatus),Convert.ToInt32(qq.ProfileStatus)),
+                    ProfileStatus = GetEnumDisplayName((EnumStatus)Convert.ToInt32(qq.ProfileStatus)), //Enum.GetName(typeof(EnumStatus) , Convert.ToInt32(qq.ProfileStatus))
                     JobID = qq.JobID,
                     Id = qq.Id,                   
                     ReferredBy = qq.ReferredBy.Substring(0, qq.ReferredBy.IndexOf('@')).Replace('.', ' '),
@@ -99,7 +101,7 @@ namespace ReferralSystem.Controllers
         {
             var listStatus = new SelectList(Enum.GetValues(typeof(EnumStatus)).Cast<EnumStatus>().Select(v => new SelectListItem
             {
-                Text = v.ToString(),
+                Text = GetEnumDisplayName(v),
                 Value = ((int)v).ToString()
             }).ToList(), "Value", "Text");
            
@@ -131,6 +133,12 @@ namespace ReferralSystem.Controllers
             // widgetViewModel.BusinessUnit = bu;
 
             return PartialView("_ReferralStatusUpdate", widgetViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Decode(string imageData)
+        {
+            return View(); //Convert imageData to Bitmap
         }
 
         [HttpPost]
@@ -224,6 +232,7 @@ namespace ReferralSystem.Controllers
                         CandidateName = emp.CandidateName,
                         MobileNumber = emp.MobileNumber,
                         CandidateSurname = emp.CandidateSurname,
+                        EmailId = emp.EmailId,
                         JobID = emp.JobId,
                         DateReferred = DateTime.Now.Date,
                         ReferredBy = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,

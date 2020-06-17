@@ -43,6 +43,10 @@ namespace ReferralSystem.Models
         [DisplayName("Mobile No.")]
         public string MobileNumber { get; set; }
 
+        [Required]
+        [DisplayName("Email")]
+        public string EmailId { get; set; }
 
-}
+
+    }
 }

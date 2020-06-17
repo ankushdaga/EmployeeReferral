@@ -7,7 +7,7 @@
     <!-- Earnings (Monthly) Card Example -->
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
+        <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -32,7 +32,7 @@
     </div>
     <!-- Pending Requests Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -64,6 +64,8 @@
     </div>
 </div>
 
+@*<button type="button" id="sendBtn" class="btn btn-success" style="margin-top: 20px">Search</button>*@
+
 <div class="row">
     <!-- Earnings (Monthly) Card Example -->
     <!-- Earnings (Monthly) Card Example -->
@@ -93,7 +95,7 @@
     </div>
     <!-- Pending Requests Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card border-left-danger shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -107,23 +109,26 @@
             </div>
         </div>
     </div>
+    @*<canvas id="graph" width="200" height="150">  </canvas>*@
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Candidates Offered</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Html.DisplayFor(x => x.f)</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-hands-helping fa-2x text-gray-300"></i>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-dark shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Candidates Offered</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Html.DisplayFor(x => x.f)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hands-helping fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+  
 </div>
+
 <div id="piechart"></div>
 
 
@@ -138,12 +143,12 @@
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Candidate'],
-            ['Selected', 8],
-            ['On Boarded', 2],
-            ['Under Review', 2],
-            ['Screen Rejected', 2],
-            ['Offered', 2],
-            ['Offer Declined', 8]
+            ['Selected', @Model.a],
+            ['Process', @Model.b],
+            ['Interviewed', @Model.c],
+            ['Screen Rejected', @Model.d],
+            ['On boarded', @Model.e],
+            ['Offered', @Model.f]
         ]);
 
         // Optional; add a title and set the width and height of the chart
@@ -153,4 +158,25 @@
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
         chart.draw(data, options);
     }
+
+  
+            //var image = document.getElementById("graph").toDataURL("image/png");
+            //image = image.replace('data:image/png;base64,', '');
+
+    document.getElementById('sendBtn').addEventListener('click', function () {
+        debugger;
+        var image = document.getElementById("graph").toDataURL("image/png");
+       // image = image.replace('data:image/png;base64,', '');
+
+        $.ajax({
+            type: 'POST',
+            url: '/Employee/Decode',
+            data: image,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (msg) {
+                alert('Image sent!');
+            }
+        });
+    });
 </script>

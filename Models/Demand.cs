@@ -15,6 +15,7 @@ namespace ReferralSystem.Models
        public string Location { get; set; }
        public string NoOfVacancies { get; set; }
        public string RequesterEmailID { get; set; }
+       public string WorkDayId { get; set; }
 
         private DateTime _DateTime { get; set; }
 

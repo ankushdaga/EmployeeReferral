@@ -27,5 +27,7 @@ namespace ReferralSystem.Models
         public string JobDescription { get; set; }
         public string Skills { get; set; }
         public string JobId { get; set; }
+
+        public string WorkDayId { get; set; }
     }
 }

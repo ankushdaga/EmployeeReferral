@@ -9,7 +9,7 @@
         <label style="margin-top: 2em;">From Date:</label>
         @(Html.Kendo().DatePicker()
               .Name("fromDate")
-              .Value("10/05/2020")
+              .Value(DateTime.Today.AddDays(-30))
               .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
               )
     </div>
@@ -18,11 +18,10 @@
         <label style="margin-top: 2em;">To Date:</label>
         @(Html.Kendo().DatePicker()
               .Name("toDate")
-              .Value("10/06/2020")
-              .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
-              )
+              .Value(DateTime.Today)
+              .HtmlAttributes(new { style = "width: 100%", title = "datepicker" }))
     </div>
-    <div class="col-md-3">
+    @*<div class="col-md-3">
         <label style="margin-top: 2em;">Band:</label>
         @(Html.Kendo().DropDownList()
               .Name("band")
@@ -48,7 +47,7 @@
               })
 
               )
-    </div>
+    </div>*@
 
     @*<div class="col-md-3">
         <label style="margin-top: 2em;">BU:</label>

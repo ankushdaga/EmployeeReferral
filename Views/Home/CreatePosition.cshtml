@@ -26,24 +26,30 @@
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
-        <div class="col-md-6">
-            <label asp-for="DemandId" class="control-label"></label>
+        <div class="col-md-3">
+            <label asp-for="DemandId" class="control-label">Demand Id</label>
             @(Html.Kendo().MultiSelectFor(model => model.DemandId)
-                                  .DataTextField("DemandId")
-                                  .DataValueField("DemandId")
-                                  .DataSource(source =>
-                                  {
-                                      source.Read(read =>
-                                      {
-                                          read.Action("DemandIds_Read", "Home");
-                                      })
-                                          .ServerFiltering(true);
-                                  })
-                                  .Value(Model.DemandId)
-            )
+                  .DataTextField("DemandId")
+                  .DataValueField("DemandId")
+                  .DataSource(source =>
+                  {
+                      source.Read(read =>
+                      {
+                          read.Action("DemandIds_Read", "Home");
+                      })
+                          .ServerFiltering(true);
+                  })
+                  .Value(Model.DemandId)
+                  )
         </div>
+        <div class="col-md-3">
+            <label asp-for="WorkDayId" class="control-label">Work Day Id</label>
+            <input asp-for="WorkDayId" class="form-control" />
+            <span asp-validation-for="WorkDayId" class="text-danger"></span>
+        </div>
+
         <div class="col-md-6">
-            <label asp-for="JobDescription" class="control-label"></label>
+            <label asp-for="JobDescription" class="control-label">Job Description</label>
             <textarea draggable="false" asp-for="JobDescription" class="form-control"> </textarea>
             <span asp-validation-for="JobDescription" class="text-danger"></span>
         </div>
@@ -51,7 +57,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            <label asp-for="BusinessUnit" class="control-label"></label>
+            <label asp-for="BusinessUnit" class="control-label">Business Unit</label>
             <input asp-for="BusinessUnit" class="form-control" />
             <span asp-validation-for="BusinessUnit" class="text-danger"></span>
         </div>
@@ -60,6 +66,7 @@
             <textarea draggable="false" asp-for="Skills" class="form-control"> </textarea>
             <span asp-validation-for="Skills" class="text-danger"></span>
         </div>
+        
       
     </div>
 
@@ -91,12 +98,12 @@
 
     <div class="row">
         <div class="col-md-6">
-            <label asp-for="NoOfVacancies" class="control-label"></label>
+            <label asp-for="NoOfVacancies" class="control-label">No Of Vacancies</label>
             <input asp-for="NoOfVacancies" class="form-control" />
             <span asp-validation-for="NoOfVacancies" class="text-danger"></span>
         </div>
         <div class="col-md-6">
-            <label asp-for="ClosingDate" class="control-label"></label>
+            <label asp-for="ClosingDate" class="control-label">Closing Date</label>
             @(Html.Kendo().DatePickerFor(x=>x.ClosingDate)
                   
                   .Value("30/05/2020")
@@ -109,7 +116,7 @@
     <div class="row">
        
         <div class="col-md-6">
-            <label asp-for="ProjectName" class="control-label"></label>
+            <label asp-for="ProjectName" class="control-label">Project Name</label>
             <input asp-for="ProjectName" class="form-control" />
             <span asp-validation-for="ProjectName" class="text-danger"></span>
         </div>
