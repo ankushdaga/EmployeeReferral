@@ -3,79 +3,87 @@
 
 
 
+@*<head>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+        <script src="http://html2canvas.hertzen.com/build/html2canvas.js"></script>
+    </head>*@
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+
 
 <div class="row">
     <div class="col-md-3">
         <label style="margin-top: 2em;">From Date:</label>
         @(Html.Kendo().DatePicker()
-              .Name("fromDate")
-              .Value(DateTime.Today.AddDays(-30))
-              .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
-              )
+                                              .Name("fromDate")
+                                              .Value(DateTime.Today.AddDays(-30))
+                                              .HtmlAttributes(new { style = "width: 100%", title = "datepicker" })
+        )
     </div>
 
     <div class="col-md-3">
         <label style="margin-top: 2em;">To Date:</label>
         @(Html.Kendo().DatePicker()
-              .Name("toDate")
-              .Value(DateTime.Today)
-              .HtmlAttributes(new { style = "width: 100%", title = "datepicker" }))
+                                              .Name("toDate")
+                                              .Value(DateTime.Today)
+                                              .HtmlAttributes(new { style = "width: 100%", title = "datepicker" }))
     </div>
     @*<div class="col-md-3">
-        <label style="margin-top: 2em;">Band:</label>
-        @(Html.Kendo().DropDownList()
-              .Name("band")
-              .DataTextField("Text")
-              .DataValueField("Value")
-              .HtmlAttributes(new { style = "width: 100%" })
-              .BindTo(new List<SelectListItem>()
-              {
-                  new SelectListItem() {
-                      Text = "7", Value ="1"
-                  },
-                  new SelectListItem() {
-                      Text = "6A", Value ="1"
-                  } ,
-                  new SelectListItem() {
-                      Text = "6B", Value ="1"
-                  }
-                  ,
-                  new SelectListItem() {
-                      Text = "5A", Value ="1"
-                  }
+            <label style="margin-top: 2em;">Band:</label>
+            @(Html.Kendo().DropDownList()
+                  .Name("band")
+                  .DataTextField("Text")
+                  .DataValueField("Value")
+                  .HtmlAttributes(new { style = "width: 100%" })
+                  .BindTo(new List<SelectListItem>()
+                  {
+                      new SelectListItem() {
+                          Text = "7", Value ="1"
+                      },
+                      new SelectListItem() {
+                          Text = "6A", Value ="1"
+                      } ,
+                      new SelectListItem() {
+                          Text = "6B", Value ="1"
+                      }
+                      ,
+                      new SelectListItem() {
+                          Text = "5A", Value ="1"
+                      }
 
-              })
+                  })
 
-              )
-    </div>*@
+                  )
+        </div>*@
 
     @*<div class="col-md-3">
-        <label style="margin-top: 2em;">BU:</label>
-        @(Html.Kendo().DropDownList()
-                      .Name("bu")
-                      .DataTextField("Text")
-                      .DataValueField("Value")
-                      .HtmlAttributes(new { style = "width: 100%" })
-                      .BindTo(new List<SelectListItem>()
-                      {
-                  new SelectListItem() {
-                      Text = "One", Value ="1"
-                  },
-                  new SelectListItem() {
-                      Text = "RMS", Value ="1"
-                  } ,
-                  new SelectListItem() {
-                      Text = "SIMS", Value ="1"
-                  } ,
-                  new SelectListItem() {
-                      Text = "CMSS", Value ="1"
-                  }
-                      })
+            <label style="margin-top: 2em;">BU:</label>
+            @(Html.Kendo().DropDownList()
+                          .Name("bu")
+                          .DataTextField("Text")
+                          .DataValueField("Value")
+                          .HtmlAttributes(new { style = "width: 100%" })
+                          .BindTo(new List<SelectListItem>()
+                          {
+                      new SelectListItem() {
+                          Text = "One", Value ="1"
+                      },
+                      new SelectListItem() {
+                          Text = "RMS", Value ="1"
+                      } ,
+                      new SelectListItem() {
+                          Text = "SIMS", Value ="1"
+                      } ,
+                      new SelectListItem() {
+                          Text = "CMSS", Value ="1"
+                      }
+                          })
 
-        )
-    </div>*@
+            )
+        </div>*@
 
-    
+
 </div>
 
 <div class="col-md-3">
@@ -87,17 +95,17 @@
 <div id="myDIV">
 
 </div>
-   
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
     function myFunction() {
 
         debugger;
         var url = '@Url.Action("DisplaySearchResults", "Home")';
-     
+
         $('#myDIV').load(url, { fromDate: $('#fromDate').val(), toDate: $('#toDate').val(), band: $('#band').val()});
-       
+
 
         //var x = document.getElementById("myDIV");
         //if (x.style.display === "none") {
@@ -107,26 +115,26 @@
         //}
     }
     // Load google charts
-    google.charts.load('current', { 'packages': ['corechart'] });
-    google.charts.setOnLoadCallback(drawChart);
+    //google.charts.load('current', { 'packages': ['corechart'] });
+    //google.charts.setOnLoadCallback(drawChart);
 
-    // Draw the chart and set the chart values
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Task', 'Candidate'],
-            ['Selected', 8],
-            ['On Boarded', 2],
-            ['Under Review', 2],
-            ['Screen Rejected', 2],
-            ['Offered', 2],
-            ['Offer Declined', 8]
-        ]);
+    //// Draw the chart and set the chart values
+    //function drawChart() {
+    //    var data = google.visualization.arrayToDataTable([
+    //        ['Task', 'Candidate'],
+    //        ['Selected', 8],
+    //        ['On Boarded', 2],
+    //        ['Under Review', 2],
+    //        ['Screen Rejected', 2],
+    //        ['Offered', 2],
+    //        ['Offer Declined', 8]
+    //    ]);
 
-        // Optional; add a title and set the width and height of the chart
-        var options = { 'title': 'Candidates', 'width': 550, 'height': 400 };
+    //    // Optional; add a title and set the width and height of the chart
+    //    var options = { 'title': 'Candidates', 'width': 550, 'height': 400 };
 
-        // Display the chart inside the <div> element with id="piechart"
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-    }
+    //    // Display the chart inside the <div> element with id="piechart"
+    //    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    //    chart.draw(data, options);
+    //}
 </script>

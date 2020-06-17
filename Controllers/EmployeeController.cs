@@ -136,8 +136,28 @@ namespace ReferralSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult Decode(string imageData)
+        public async Task<ActionResult> Decode(string imageData)
         {
+
+            var apiKey = _configuration.GetSection("SENDGRID_API_KEY").Value;
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("ankush.daga@capita.co.uk", "Capita");
+
+            List<EmailAddress> tos = new List<EmailAddress>
+            {
+                new EmailAddress("ankush.daga@capita.co.uk", "Example User 2")
+            };
+
+            var to = new EmailAddress("ankush.daga@capita.co.uk", "");
+
+
+            var subject = "Monthly Report";
+            var htmlContent = "<img src ='" + imageData + "' alt='Red dot' />";
+
+          //  var htmlContent = "<img src = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg ==' alt='Red dot' />";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
+            var response = await client.SendEmailAsync(msg);
+
             return View(); //Convert imageData to Bitmap
         }
 
@@ -237,7 +257,7 @@ namespace ReferralSystem.Controllers
                         DateReferred = DateTime.Now.Date,
                         ReferredBy = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
                         BlobURI = abc,
-                        ProfileStatus = EnumStatus.UnderReview.ToString()
+                        ProfileStatus = "1"
                         //GetEnumDisplayName(EnumStatus.UnderReview)
                     };
                     _prof.InsertOne(bookdata);
