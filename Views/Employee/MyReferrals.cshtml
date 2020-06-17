@@ -49,12 +49,11 @@ else
                                                     {
                                                         if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value == "ankush.daga@capita.co.uk")
                                                         {
-                                                            command.Custom("Update Status").Click("updateStatus");
+                                                            command.Custom("Update Status").Text(" ").IconClass("k-icon k-i-edit").HtmlAttributes(new { @title = "Update Status" }).Click("updateStatus");
                                                         }
-
-
-                                                        command.Custom("Download").Click("downloadFile");
-                                                    }).Width(80);
+                                                        
+                                                        command.Custom("Download").Text(" ").IconClass("k-icon k-i-download").HtmlAttributes(new { @title = "Download resume" }).Click("downloadFile");
+                                                    }).Width(50);
 
 
                                                     //columns.Bound(p => p.AdditionalDetails).ClientTemplate("<a href='" + @Html.Raw(Url.Action("DownloadResume", "Home") + "?#= BlobURI #'") + ">Download</a>");
