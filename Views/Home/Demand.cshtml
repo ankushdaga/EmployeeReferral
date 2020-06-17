@@ -22,12 +22,12 @@
                                                     columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(120);
                                                     columns.Command(command =>
                                                     {
-                                                        command.Custom("Create Position").Click("CreatePosition").Text(" ").HtmlAttributes(new { @class = "create", @title = "Create Position" });
-                                                        command.Custom("View Demand").Click("ViewDemand").Text(" ").HtmlAttributes(new { @class = "view", @title = "View Demand" });
+                                                        //command.Custom("Create Position").Click("CreatePosition").Text("Create Position");
+                                                        //command.Custom("View Demand").Click("ViewDemand").Text("View Demand");
+                                                        command.Custom("Create Position").Click("CreatePosition").Text(" ").IconClass("k-icon k-i-pencil").HtmlAttributes(new { @title = "Create Position" });
+                                                        command.Custom("View Demand").Click("ViewDemand").Text(" ").IconClass("k-icon k-i-eye").HtmlAttributes(new { @title = "View Demand" });
 
- 
-
-                                                    }).Width(60);
+                                                    }).Width(100);
                                                 })
                                                 .Height(500)
                                                 .Editable(editable => editable.Mode(GridEditMode.PopUp))
@@ -179,20 +179,6 @@
 
 
 <style>
-    .create {
-        background-image: url('../images/create.png');
-        background-size: cover;
-        height: 31px;
-        width: 31px;
-    }
-
-    .view {
-        background-image: url('../images/view.png');
-        background-size: cover;
-        height: 31px;
-        width: 31px;
-    }
-
     .k-grid tr .checkbox-align {
         text-align: center;
         vertical-align: middle;
@@ -240,6 +226,14 @@
     #grid .k-grid-edit-row > td > .k-rating {
         margin-left: 0;
         width: 100%;
+    }
+
+    /*.k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+        margin:0;
+    }*/
+
+    .k-icon {
+        margin: 0 !important;
     }
 </style>
 

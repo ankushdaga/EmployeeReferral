@@ -24,7 +24,7 @@
                                     columns.Bound(p => p.NoOfVacancies).Width(100);
                         // columns.Bound(p => p.ClosingDate).Width(100);
 
-                        columns.Command(command => command.Custom("Refer").Click("showDetails")).Width(180);
+                        columns.Command(command => command.Custom("Refer").Text(" ").IconClass("k-icon k-i-user").HtmlAttributes(new { @title = "Refer" }).Click("showDetails")).Width(60);
                                 })
                                 .Height(500).Width(1200)
                                 .ToolBar(t => t.Search())
@@ -174,6 +174,10 @@
     #grid .k-grid-edit-row > td > .k-rating {
         margin-left: 0;
         width: 100%;
+    }
+
+    .k-icon {
+        margin: 0 !important;
     }
 </style>
 

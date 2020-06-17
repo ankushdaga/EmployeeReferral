@@ -17,9 +17,12 @@
                                 columns.Bound(p => p.NoOfVacancies).Width(120);
                                 columns.Bound(p => p.ClosingDate).Format("{0:dd/MM/yyyy}").Width(100);
                                 columns.Bound(p => p.Status).Width(100).Title("Active").ClientTemplate("<input type='checkbox' checked style='height:15px; width:15px;'/>");
+                                columns.Command(command =>
+                                {
+                                    command.Edit().Text(" ").IconClass("k-icon k-i-pencil").HtmlAttributes(new { @title = "Edit Position" });
+                                    command.Custom("View Profiles").Text(" ").Click("showAllReferrals").IconClass("k-icon k-i-eye").HtmlAttributes(new { @title = "View Profiles" });
 
-                                columns.Command(command => { command.Edit(); }).Width(100);
-                                columns.Command(command => command.Custom("View Profiles").Click("showAllReferrals")).Width(180);
+                                }).Width(100);
                             })
                             .Height(500)
                             .Editable(editable => editable.Mode(GridEditMode.InLine))
@@ -140,6 +143,10 @@
     #grid .k-grid-edit-row > td > .k-rating {
         margin-left: 0;
         width: 100%;
+    }
+
+    .k-icon {
+        margin: 0 !important;
     }
 </style>
 
